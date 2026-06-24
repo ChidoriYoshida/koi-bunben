@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>古井農場 分娩舎 棚卸</title>
+<style>
+  :root{
+    --ink:#1d2520;
+    --ink-soft:#4a544c;
+    --paper:#f3f1e9;
+    --panel:#ffffff;
+    --line:#d3cfc1;
+    --line-strong:#b4ae9c;
+    --sow:#2f6b46;       /* PS = green */
+    --sow-soft:#e3efe6;
+    --gp:#8a5a1c;        /* GP = amber-brown */
+    --gp-soft:#f4ead7;
+    --milky:#3a6ea5;     /* milky = blue */
+    --milky-soft:#e3edf6;
+    --wean:#b07d2a;      /* 離乳子豚 = tan */
+    --wean-soft:#f6efdd;
+    --warn:#b23b2e;
+    --ok:#2f6b46;
+    --aisle:#ece9dd;
+    --shadow:0 1px 0 rgba(0,0,0,.04), 0 6px 20px -12px rgba(0,0,0,.35);
+    --r:10px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;
+    background:var(--paper);color:var(--ink);
+    font-feature-settings:"palt";line-height:1.4;-webkit-font-smoothing:antialiased;
+  }
+  .tnum{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+  header{
+    position:sticky;top:0;z-index:40;background:var(--ink);color:#f3f1e9;
+    padding:10px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    box-shadow:0 2px 10px -4px rgba(0,0,0,.5);
+  }
+  header .brand{font-weight:800;letter-spacing:.04em;font-size:16px;display:flex;align-items:baseline;gap:8px}
+  header .brand small{font-weight:500;opacity:.75;font-size:11px;letter-spacing:.12em}
+  header .meta{display:flex;gap:10px;align-items:center;margin-left:auto;flex-wrap:wrap}
+  header .meta label{font-size:11px;opacity:.7;display:block;letter-spacing:.08em}
+  header .meta input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:7px;padding:5px 8px;font-size:13px;font-family:inherit;width:128px}
+  header .meta input::placeholder{color:rgba(255,255,255,.45)}
+  #saveState{font-size:11px;opacity:.7;min-width:70px;text-align:right;letter-spacing:.05em}
+
+  nav{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--line);padding:8px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:0 0 auto;font-family:inherit;font-size:14px;font-weight:700;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink-soft);border-radius:999px;padding:8px 15px;cursor:pointer;transition:.12s;white-space:nowrap}
+  nav button .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sow);margin-left:6px;vertical-align:1px;opacity:0}
+  nav button.has .dot{opacity:1}
+  nav button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  nav button.sum{margin-left:auto}
+
+  main{max-width:780px;margin:0 auto;padding:12px 10px 130px}
+
+  .room-head{display:flex;align-items:baseline;gap:10px;margin:4px 2px 8px}
+  .room-head h2{margin:0;font-size:22px;font-weight:800}
+  .room-head .hint{font-size:11px;color:var(--ink-soft)}
+
+  .legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--ink-soft);margin:0 2px 10px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid var(--line-strong)}
+
+  .orient{display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;letter-spacing:.25em;color:#9a937f;margin:2px}
+  .orient .ln{flex:1;height:1px;background:var(--line)}
+
+  .floorwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 9px;box-shadow:var(--shadow)}
+  .floorrow{display:flex;gap:6px;align-items:stretch}
+  .fcol{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .fcenter{flex:2;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .fcenter-top{display:flex;gap:6px}
+  .fcenter-top .fcol{flex:1}
+
+  .pen{display:flex;flex-direction:column;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:#fff;height:82px}
+  .pen .pno{font-weight:800;font-size:12px;color:var(--ink-soft);text-align:center;padding:1px 0;background:#f0ede2;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;line-height:1.35}
+  .pen .sowchk{display:flex;align-items:center;justify-content:center;gap:3px;flex:0 0 24px;height:24px;font-size:12px;font-weight:800;color:#c4bda9;cursor:pointer;background:#fff;border-bottom:1px solid var(--line);letter-spacing:.02em}
+  .pen .sowchk .bx{width:13px;height:13px;border:1.5px solid #c4bda9;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;line-height:1;color:#fff}
+  .pen.sowOn .sowchk{background:var(--sow);color:#fff}
+  .pen.sowOn .sowchk .bx{background:#fff;border-color:#fff;color:var(--sow)}
+  .pen .cntone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:#fcfbf6;line-height:1}
+  .pen .cntone.has{background:#fff}
+  .pen .cntone .lab{font-size:9px;color:var(--ink-soft);margin-bottom:1px}
+  .pen .cntone .num{font-size:24px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pen .cntone .num.z{color:#cfc9b8;font-weight:700}
+  .pen.sowOn{border-color:var(--sow)}
+  .pen.sowOn .pno{background:var(--sow-soft);color:var(--sow)}
+  .pen.weanOn{border-color:var(--wean)}
+  .pen.weanOn .pno{background:var(--wean-soft);color:var(--wean)}
+  .pen.weanOn .cntone .lab{color:var(--wean);font-weight:700}
+
+  .pen.milky{border-color:var(--milky);background:var(--milky-soft);height:82px}
+  .pen.milky .pno{background:var(--milky);color:#fff;border-bottom-color:var(--milky)}
+  .pen.milky .mlabel{flex:0 0 17px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:var(--milky)}
+  .pen.milky .cntone{border-top:1px solid #c5d6e8;background:transparent}
+  .pen.milky .cnt2{flex:1;display:flex;border-top:1px solid #c5d6e8;cursor:pointer;background:transparent}
+  .pen.milky .cnt2 .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .pen.milky .cnt2 .c + .c{border-left:1px dashed #c5d6e8}
+  .pen.milky .cnt2 .lab{font-size:9px;color:var(--ink-soft);margin-bottom:1px}
+  .pen.milky .cnt2 .num{font-size:20px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+  .pen.milky .cnt2 .num.z{color:#a9bdd0;font-weight:700}
+
+  /* room control: PS/GP inputs + 全部チェック */
+  .roomctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin:2px 0 10px;box-shadow:var(--shadow)}
+  .roomctl .psgp{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .roomctl .psgp .ttl{font-size:13px;font-weight:700;color:var(--ink-soft)}
+  .roomctl .psgp label{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--sow)}
+  .roomctl .psgp input{width:54px;font-family:inherit;font-size:18px;font-weight:800;text-align:center;border:1px solid var(--line-strong);border-radius:8px;padding:5px;background:#fcfbf6;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .roomctl .chkinfo{font-size:12px;color:var(--ink-soft)}
+  .roomctl .chkinfo b{font-size:15px;color:var(--ink)}
+  .roomctl .ckbtns{display:flex;gap:6px}
+  .roomctl .ckbtns button{font-family:inherit;font-size:13px;font-weight:800;border-radius:8px;padding:9px 12px;cursor:pointer;border:1px solid var(--sow);background:var(--sow);color:#fff}
+  .roomctl .ckbtns .ckclr{background:#fff;color:var(--ink-soft);border-color:var(--line-strong)}
+
+  .seg2{display:flex;gap:6px}
+  .seg2 button{flex:1;font-family:inherit;font-size:15px;font-weight:700;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink-soft);border-radius:9px;padding:13px;cursor:pointer}
+  .seg2 button.on{background:var(--sow);border-color:var(--sow);color:#fff}
+  .seg2 button[data-sow="0"].on{background:var(--ink-soft);border-color:var(--ink-soft)}
+
+  .rtotals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 10px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;text-align:center;box-shadow:var(--shadow)}
+  .stat .lbl{font-size:11px;color:var(--ink-soft);letter-spacing:.08em}
+  .stat .val{font-size:26px;font-weight:800;line-height:1.1}
+  .stat .val small{font-size:13px;font-weight:600;color:var(--ink-soft);margin-left:2px}
+  .stat .sub{font-size:10px;color:var(--ink-soft);margin-top:1px}
+
+  .check{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px;box-shadow:var(--shadow)}
+  .check h3{margin:0 0 8px;font-size:13px;letter-spacing:.06em;color:var(--ink-soft)}
+  .crow{display:grid;grid-template-columns:64px 1fr 1fr 30px;gap:8px;align-items:center;margin-bottom:8px}
+  .crow:last-child{margin-bottom:0}
+  .crow .clbl{font-size:13px;font-weight:700}
+  .crow .cell{display:flex;flex-direction:column;gap:1px}
+  .crow .cell .t{font-size:10px;color:var(--ink-soft);letter-spacing:.05em}
+  .crow .cell .calc{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+  .crow input.actual{width:100%;font-family:inherit;font-size:16px;font-weight:800;text-align:center;border:1px solid var(--line-strong);border-radius:7px;padding:5px;color:var(--ink);background:#fcfbf6;font-variant-numeric:tabular-nums}
+  .crow .mark{font-size:20px;text-align:center;font-weight:900}
+  .mark.ok{color:var(--ok)} .mark.ng{color:var(--warn)}
+
+  .sumgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:18px}
+  .bigstat{background:var(--ink);color:#f3f1e9;border-radius:var(--r);padding:14px 16px}
+  .bigstat .lbl{font-size:12px;opacity:.75;letter-spacing:.1em}
+  .bigstat .val{font-size:34px;font-weight:800}
+  .bigstat .val small{font-size:15px;opacity:.7;margin-left:3px;font-weight:600}
+  .bigstat.alt{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+  .bigstat.alt .lbl{opacity:.6}
+
+  .table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);margin-bottom:18px}
+  .table th,.table td{padding:9px 6px;text-align:center;font-size:13px;border-bottom:1px solid var(--line)}
+  .table thead th{background:#f0ede2;font-size:11px;letter-spacing:.04em;color:var(--ink-soft)}
+  .table tbody tr:last-child td{border-bottom:none}
+  .table td.room{font-weight:800;text-align:left}
+  .table td .ng{color:var(--warn);font-weight:800}.table td .ok{color:var(--ok);font-weight:800}
+  .table input.actual2{width:52px;font-family:inherit;font-size:14px;font-weight:700;text-align:center;border:1px solid var(--line-strong);border-radius:6px;padding:4px;background:#fcfbf6;font-variant-numeric:tabular-nums}
+
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .actions button{flex:1 1 120px;font-family:inherit;font-size:14px;font-weight:700;border-radius:9px;padding:12px;cursor:pointer;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink)}
+  .actions button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .actions button.danger{color:var(--warn);border-color:var(--warn)}
+  .section-title{font-size:13px;letter-spacing:.1em;color:var(--ink-soft);margin:4px 2px 10px;font-weight:700}
+
+  .scrim{position:fixed;inset:0;background:rgba(20,24,20,.45);z-index:60;display:none;align-items:flex-end;justify-content:center}
+  .scrim.show{display:flex}
+  .sheet{background:var(--paper);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 40px -10px rgba(0,0,0,.5);animation:rise .18s ease}
+  @keyframes rise{from{transform:translateY(20px);opacity:.6}to{transform:translateY(0);opacity:1}}
+  .sheet h3{margin:0 0 2px;font-size:20px;font-weight:800}
+  .sheet .sub{font-size:12px;color:var(--ink-soft);margin-bottom:10px}
+  .fieldlbl{font-size:12px;color:var(--ink-soft);font-weight:700;letter-spacing:.04em;margin:14px 0 7px}
+  .seg{display:flex;gap:6px}
+  .seg button{flex:1;font-family:inherit;font-size:14px;font-weight:700;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink-soft);border-radius:9px;padding:11px 4px;cursor:pointer}
+  .seg button.on[data-v="none"]{background:var(--ink-soft);border-color:var(--ink-soft);color:#fff}
+  .seg button.on[data-v="PS"]{background:var(--sow);border-color:var(--sow);color:#fff}
+  .seg button.on[data-v="GP"]{background:var(--gp);border-color:var(--gp);color:#fff}
+  .picker{display:flex;flex-wrap:wrap;gap:6px}
+  .picker .chip{flex:1 0 42px;min-width:42px;height:48px;border:1px solid var(--line-strong);border-radius:10px;background:var(--panel);font-family:inherit;font-size:18px;font-weight:800;color:var(--ink);cursor:pointer}
+  .picker .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .picker .manual{flex:0 0 66px;width:66px;height:48px;border:1px dashed var(--line-strong);border-radius:10px;text-align:center;font-family:inherit;font-size:18px;font-weight:800;background:#fcfbf6;color:var(--ink);font-variant-numeric:tabular-nums}
+  .picker .manual::placeholder{color:#bbb4a2;font-size:12px;font-weight:600}
+  .sheet-actions{display:flex;gap:8px;margin-top:20px}
+  .sheet-actions button{flex:1;font-family:inherit;font-size:15px;font-weight:800;border-radius:11px;padding:14px;cursor:pointer;border:none}
+  .sheet-actions .clear{background:transparent;color:var(--ink-soft);border:1px solid var(--line-strong);flex:0 0 96px}
+  .sheet-actions .done{background:var(--ink);color:#fff}
+
+  @media (max-width:430px){
+    header .meta input{width:102px}
+    .pen .sowtog button{font-size:11px}
+    .stat .val{font-size:22px}
+  }
+
+  /* consolidated summary table */
+  .sumtable th{font-size:11px;padding:6px 5px}
+  .sumtable td{padding:7px 5px}
+  .sumtable td.b{font-weight:800;background:#faf8f1}
+  .sumtable td.dcell{font-weight:800}
+  .sumtable .trtotal td{background:#f0ede2;font-weight:800;border-top:2px solid var(--line-strong)}
+  .sumtable input.bookin2{width:54px;font-family:inherit;font-size:14px;font-weight:700;text-align:center;border:1px solid var(--line-strong);border-radius:6px;padding:4px;background:#fcfbf6;font-variant-numeric:tabular-nums}
+  .note{font-size:11px;color:var(--ink-soft);margin:10px 2px 14px;line-height:1.5}
+
+  /* ---------- 印刷用ドキュメント（A4横・提出用） ---------- */
+  .printdoc{display:none}
+  @media print{
+    html,body{margin:0}
+    header,nav,main,.scrim{display:none !important}
+    @page{size:A4 portrait;margin:10mm 10mm 10mm 16mm}  /* iPad(Safari)対策で縦。左16mm＝綴じ代 */
+    body{background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .printdoc{display:block !important;padding-top:4mm}
+    .pd-head{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:6px;gap:10px}
+    .pd-title{font-size:17px;font-weight:800;letter-spacing:.02em;line-height:1.2}
+    .pd-headright{font-size:11px;font-weight:700;text-align:right;line-height:1.5}
+    .pd-headright .nm{font-weight:800}
+    .pd-secttl{font-size:9.5px;font-weight:700;margin:6px 0 2px}
+    .pd-table{width:100%;border-collapse:collapse;table-layout:fixed}
+    .pd-table th,.pd-table td{border:1px solid #000;padding:2px 2px;text-align:center;font-size:10.5px;font-variant-numeric:tabular-nums}
+    .pd-table thead th{background:#e8e8e8;font-weight:700;font-size:9.5px;padding:2px 2px}
+    .pd-table .grp{background:#dcdcdc}
+    .pd-table td.room{font-weight:700}
+    .pd-table td.big{font-weight:800;background:#f3f3f3}
+    .pd-table .total td{font-weight:800;background:#e0e0e0;border-top:2px solid #000}
+    .pd-table td.ng{font-weight:800}
+    .pd-sub{font-size:9px;margin:3px 2px 2px}
+
+    /* 各部屋の房別明細（縦A4：3部屋×2段で1枚に） */
+    .pd-rooms{display:flex;flex-wrap:wrap;gap:3.5mm 3mm;margin-top:3mm}
+    .pd-room{flex:0 0 calc((100% - 6mm)/3);min-width:0}
+    .pd-rtitle{font-size:9px;font-weight:700;text-align:center;border:1px solid #000;background:#e8e8e8;padding:1.5px 0;margin-bottom:1.5px;white-space:nowrap;overflow:hidden}
+    .pd-grid{display:flex;gap:1.5px;align-items:stretch}
+    .pd-col{flex:1;display:flex;flex-direction:column;gap:1.5px;min-width:0}
+    .pd-center{flex:2;display:flex;flex-direction:column;gap:1.5px;min-width:0}
+    .pd-ctop{display:flex;gap:1.5px}
+    .pd-ctop .pd-col{flex:1}
+    .pd-cell{border:1px solid #aaa;height:6.3mm;display:flex;align-items:center;justify-content:center;line-height:1;position:relative;overflow:hidden}
+    .pd-cell .n{font-size:7px;color:#777;position:absolute;top:0.3mm;left:0.5mm;line-height:1}
+    .pd-cell .v{font-size:12px;font-weight:800}
+    .pd-cell .w{font-size:7.5px;color:#222;position:absolute;bottom:0.3mm;right:0.6mm}
+    .pd-cell.ps{background:#dff0e6;border-color:#2f6b46}
+    .pd-cell.wean{background:#f6efdd;border-color:#b07d2a}
+    .pd-cell.milky{background:#dde9f5;border-color:#3a6ea5}
+    .pd-cell.milky .v{font-size:9.5px}
+    .pagebreak{page-break-before:always}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">古井農場 <small>分娩舎 棚卸</small></div>
+  <div class="meta">
+    <div><label>記入日</label><input type="date" id="mDate"></div>
+    <div><label>記録者</label><input type="text" id="mRec" placeholder="氏名（複数可）"></div>
+  </div>
+  <div id="saveState">保存済み</div>
+</header>
+
+<nav id="nav"></nav>
+<main id="main"></main>
+
+<div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+
+<div class="printdoc" id="printdoc"></div>
+
+<script>
+"use strict";
+if(window.NodeList&&!NodeList.prototype.forEach){NodeList.prototype.forEach=Array.prototype.forEach;}
+/* =========================================================================
+   レイアウト：実際の4列配置（6部屋とも共通）
+     ・母豚房は 50（番号1〜50）
+     ・ミルキー専用室は中央手前に固定（2房連結・母豚なし）
+     ・歩く順路＝番号順になるよう配置（外側2列は参考フォームと一致）
+        左から  1列目:1〜13 / 2列目:14〜25 / 3列目:26〜37 / 4列目:38〜50
+        上=奥、下=手前(入口)。手前中央がミルキー室。
+   番号の対応を変えたい場合は penAt() の式だけ直せば全機能が追従します。
+   ========================================================================= */
+const ROWS=13, COLS=4;
+function penAt(r,c){            // r:1(奥)..13(手前)  c:1(左)..4(右)
+  if(c===1) return 14 - r;                       // 13..1 （手前=1）
+  if(c===2) return (r===13)? null : 13 + r;      // 14..25（手前側=25, 13行目=ミルキー）
+  if(c===3) return (r===13)? null : 38 - r;      // 37..26（手前側=26, 13行目=ミルキー）
+  if(c===4) return 37 + r;                       // 38..50（手前=50）
+  return null;
+}
+const SOW_PENS=(()=>{const a=[];for(let r=1;r<=ROWS;r++)for(let c=1;c<=COLS;c++){const p=penAt(r,c);if(p!=null)a.push(p);}return a.sort((x,y)=>x-y);})();
+const ROOMS=[1,2,3,4,5,6];
+const STORE_KEY="furui_bunben_tanaoroshi_v2";
+
+let state=load()||freshState();
+migrate(state);
+function migrate(s){
+  ROOMS.forEach(r=>{
+    const rm=s.rooms[r];if(!rm)return;
+    if(!rm.book) rm.book=rm.actual?{nursing:rm.actual.nursing||"",weaned:rm.actual.weaned||""}:{nursing:"",weaned:""};
+    delete rm.actual;
+    // 旧式（房ごとPS/GP）→ 部屋PS/GP数 ＋ 在室フラグ
+    if(typeof rm.ps!=="number"||typeof rm.gp!=="number"){
+      let ps=0,gp=0;
+      Object.keys(rm.pens||{}).forEach(p=>{const c=rm.pens[p];if(c&&c.sow==="PS")ps++;else if(c&&c.sow==="GP")gp++;});
+      if(typeof rm.ps!=="number")rm.ps=ps;
+      if(typeof rm.gp!=="number")rm.gp=gp;
+    }
+    // 房データを新形 {sow:bool, piglets:n} へ
+    Object.keys(rm.pens||{}).forEach(p=>{
+      const c=rm.pens[p];
+      if(c&&typeof c.sow==="string") rm.pens[p]={sow:(c.sow==="PS"||c.sow==="GP"),piglets:(Number(c.nursing)||0)+(Number(c.weaned)||0)};
+      else if(c&&typeof c.sow!=="boolean") rm.pens[p]={sow:!!(c&&c.sow),piglets:Number(c&&c.piglets)||0};
+      else if(c&&typeof c.piglets!=="number") rm.pens[p]={sow:!!c.sow,piglets:(Number(c.nursing)||0)+(Number(c.weaned)||0)};
+    });
+    if(rm.milky){
+      if(typeof rm.milky.nursing!=="number"&&typeof rm.milky.weaned!=="number"){
+        if(typeof rm.milky.piglets==="number") rm.milky={nursing:rm.milky.piglets,weaned:0};
+        else rm.milky={nursing:Number(rm.milky.nursing)||0,weaned:Number(rm.milky.weaned)||0};
+      }else{ rm.milky={nursing:Number(rm.milky.nursing)||0,weaned:Number(rm.milky.weaned)||0}; }
+    } else rm.milky={nursing:0,weaned:0};
+    if(!rm.pens)rm.pens={};
+    SOW_PENS.forEach(p=>{const c=rm.pens[p];if(!c||typeof c.sow!=="boolean"||typeof c.piglets!=="number")rm.pens[p]={sow:!!(c&&c.sow),piglets:Number(c&&c.piglets)||0};});
+  });
+}
+
+function pad2(n){n=String(n);return n.length<2?"0"+n:n;}
+function freshState(){
+  const t=new Date();
+  const iso=t.getFullYear()+"-"+pad2(t.getMonth()+1)+"-"+pad2(t.getDate());
+  const rooms={};
+  ROOMS.forEach(r=>{
+    rooms[r]={pens:{},milky:{nursing:0,weaned:0},ps:0,gp:0,book:{nursing:"",weaned:""}};
+    SOW_PENS.forEach(p=>{rooms[r].pens[p]={sow:false,piglets:0};});
+  });
+  return {meta:{date:iso,recorder:""},rooms};
+}
+function load(){try{const r=localStorage.getItem(STORE_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+let saveTimer=null;
+function save(){
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(state));}catch(e){}
+  const el=document.getElementById("saveState");el.textContent="保存中…";
+  clearTimeout(saveTimer);saveTimer=setTimeout(()=>{el.textContent="保存済み";},350);
+}
+
+function pen(r,p){return state.rooms[r].pens[p];}
+function roomTotals(r){
+  const rm=state.rooms[r];
+  let nursing=0,weaned=0,checked=0;
+  SOW_PENS.forEach(p=>{const c=rm.pens[p];const pg=Number(c.piglets)||0;if(c.sow){checked++;nursing+=pg;}else{weaned+=pg;}});
+  nursing+=Number(rm.milky.nursing)||0;     // ミルキー室の授乳子豚
+  weaned +=Number(rm.milky.weaned)||0;      // ミルキー室の離乳子豚
+  const sowPS=Number(rm.ps)||0,sowGP=Number(rm.gp)||0;
+  return {sowPS,sowGP,sow:sowPS+sowGP,checked,nursing,weaned};
+}
+function grandTotals(){let t={sowPS:0,sowGP:0,sow:0,nursing:0,weaned:0};ROOMS.forEach(r=>{const x=roomTotals(r);for(const k in t)t[k]+=x[k];});return t;}
+function sumBook(k){let s=0,any=false;ROOMS.forEach(r=>{const v=state.rooms[r].book[k];if(v!==""){s+=Number(v)||0;any=true;}});return any?s:"";}
+function roomHasData(r){const t=roomTotals(r);return t.sow||t.checked||t.nursing||t.weaned||state.rooms[r].book.nursing!==""||state.rooms[r].book.weaned!=="";}
+function penLabel(r,p){return r+"-"+p;}
+
+/* ---------- ナビ ---------- */
+let view="room1";
+function buildNav(){
+  const nav=document.getElementById("nav");nav.innerHTML="";
+  ROOMS.forEach(r=>{const b=document.createElement("button");b.innerHTML=`${r}号室<span class="dot"></span>`;b.dataset.view="room"+r;nav.appendChild(b);});
+  const s=document.createElement("button");s.textContent="集計・チェック";s.className="sum";s.dataset.view="sum";nav.appendChild(s);
+  nav.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.view;render();window.scrollTo({top:0});}));
+}
+function syncNav(){
+  document.querySelectorAll("#nav button").forEach(b=>{
+    b.classList.toggle("active",b.dataset.view===view);
+    if(b.dataset.view&&b.dataset.view.startsWith("room")){b.classList.toggle("has",!!roomHasData(Number(b.dataset.view.slice(4))));}
+  });
+}
+
+/* ---------- セルの見た目 ---------- */
+function penClass(r,p){const c=pen(r,p);let cls="pen";if(c.sow)cls+=" sowOn";else if(c.piglets)cls+=" weanOn";return cls;}
+function penInner(r,p){
+  const c=pen(r,p);const pg=c.piglets||0;
+  const lab=c.sow?"授乳":(pg?"離乳":"子豚");
+  return `<div class="pno tnum">${p}</div>
+    <div class="sowchk" data-act="sow" data-r="${r}" data-p="${p}"><span class="bx">${c.sow?"✓":""}</span>母豚</div>
+    <div class="cntone ${pg?"has":""}" data-act="edit" data-r="${r}" data-p="${p}">
+      <span class="lab">${lab}</span><span class="num tnum ${pg?"":"z"}">${pg}</span>
+    </div>`;
+}
+function milkyInner(r){
+  const m=state.rooms[r].milky;const n=m.nursing||0,w=m.weaned||0;
+  return `<div class="pno">ミルキー室</div>
+    <div class="mlabel">母豚なし</div>
+    <div class="cnt2 ${(n||w)?"has":""}" data-act="medit" data-r="${r}">
+      <div class="c"><span class="lab">授乳</span><span class="num tnum ${n?"":"z"}">${n}</span></div>
+      <div class="c"><span class="lab">離乳</span><span class="num tnum ${w?"":"z"}">${w}</span></div>
+    </div>`;
+}
+
+const mainEl=document.getElementById("main");
+function render(){ if(view==="sum")renderSum(); else renderRoom(Number(view.slice(4))); syncNav(); }
+
+function colHTML(r,rows,col){
+  return rows.map(row=>{const p=penAt(row,col);return `<div class="${penClass(r,p)}" id="c-${r}-${p}">${penInner(r,p)}</div>`;}).join("");
+}
+function renderRoom(r){
+  const full=[...Array(ROWS)].map((_,i)=>i+1);        // 行1..13（外側列）
+  const inner=[...Array(ROWS-1)].map((_,i)=>i+1);     // 行1..12（中央2列・手前行はミルキー）
+  const cells=`<div class="floorrow">
+      <div class="fcol">${colHTML(r,full,1)}</div>
+      <div class="fcenter">
+        <div class="fcenter-top">
+          <div class="fcol">${colHTML(r,inner,2)}</div>
+          <div class="fcol">${colHTML(r,inner,3)}</div>
+        </div>
+        <div class="pen milky" data-r="${r}">${milkyInner(r)}</div>
+      </div>
+      <div class="fcol">${colHTML(r,full,4)}</div>
+    </div>`;
+  const t=roomTotals(r),a=state.rooms[r].book,rm=state.rooms[r];
+  const nOk=a.nursing!==""?Number(a.nursing)===t.nursing:null;
+  const wOk=a.weaned!==""?Number(a.weaned)===t.weaned:null;
+  mainEl.innerHTML=`
+    <div class="room-head"><h2>${r}号室</h2><span class="hint">母豚は「母豚」をタップでチェック（全部チェック可）。子豚は下段タップで頭数を選択。母豚あり→授乳／なし→離乳に自動分類。</span></div>
+
+    <div class="roomctl">
+      <div class="psgp">
+        <span class="ttl">母豚頭数</span>
+        <label>PS<input class="psin tnum" inputmode="numeric" data-r="${r}" data-k="ps" value="${rm.ps||0}"></label>
+        <label>GP<input class="psin tnum" inputmode="numeric" data-r="${r}" data-k="gp" value="${rm.gp||0}"></label>
+        <span class="chkinfo">在室チェック <b id="rt-chk">${t.checked}</b> 房</span>
+      </div>
+      <div class="ckbtns">
+        <button class="ckall" data-act="checkall" data-r="${r}">全部チェック</button>
+        <button class="ckclr" data-act="clearall" data-r="${r}">全解除</button>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><i style="background:var(--sow-soft);border-color:var(--sow)"></i>母豚あり（授乳）</span>
+      <span><i style="background:var(--wean-soft);border-color:var(--wean)"></i>離乳子豚</span>
+      <span><i style="background:var(--milky-soft);border-color:var(--milky)"></i>ミルキー室</span>
+      <span><i style="background:#fff"></i>空房</span>
+    </div>
+    <div class="orient"><span class="ln"></span><span>奥</span><span class="ln"></span></div>
+    <div class="floorwrap">${cells}</div>
+    <div class="orient" style="margin-top:6px"><span class="ln"></span><span>手前・入口（中央＝ミルキー室）</span><span class="ln"></span></div>
+
+    <div class="rtotals">
+      <div class="stat"><div class="lbl">母　豚</div><div class="val tnum" id="rt-sow">${t.sow}<small>頭</small></div><div class="sub" id="rt-psgp">PS ${t.sowPS} / GP ${t.sowGP}</div></div>
+      <div class="stat"><div class="lbl">授乳子豚</div><div class="val tnum" id="rt-nur">${t.nursing}<small>頭</small></div></div>
+      <div class="stat"><div class="lbl">離乳子豚</div><div class="val tnum" id="rt-wea">${t.weaned}<small>頭</small></div></div>
+    </div>
+
+    <div class="check">
+      <h3>照合（棚卸実数 ↔ 集計頭数）</h3>
+      <div class="crow">
+        <div class="clbl">授乳子豚</div>
+        <div class="cell"><span class="t">棚卸(実数)</span><span class="calc tnum" id="ck-nur">${t.nursing}</span></div>
+        <div class="cell"><span class="t">集計頭数</span><input class="bookin tnum" inputmode="numeric" data-r="${r}" data-k="nursing" value="${a.nursing}" placeholder="—"></div>
+        <div class="mark ${nOk===null?"":nOk?"ok":"ng"}" id="mk-nur">${nOk===null?"":nOk?"✔":"✕"}</div>
+      </div>
+      <div class="crow">
+        <div class="clbl">離乳子豚</div>
+        <div class="cell"><span class="t">棚卸(実数)</span><span class="calc tnum" id="ck-wea">${t.weaned}</span></div>
+        <div class="cell"><span class="t">集計頭数</span><input class="bookin tnum" inputmode="numeric" data-r="${r}" data-k="weaned" value="${a.weaned}" placeholder="—"></div>
+        <div class="mark ${wOk===null?"":wOk?"ok":"ng"}" id="mk-wea">${wOk===null?"":wOk?"✔":"✕"}</div>
+      </div>
+    </div>`;
+
+  mainEl.querySelectorAll("[data-act]").forEach(el=>el.addEventListener("click",onCellAct));
+  mainEl.querySelectorAll("input.psin").forEach(el=>el.addEventListener("input",e=>{
+    const v=e.target.value.replace(/[^\d]/g,"");e.target.value=v;
+    state.rooms[Number(e.target.dataset.r)][e.target.dataset.k]=Number(v)||0;save();refreshTotals(Number(e.target.dataset.r));
+  }));
+  mainEl.querySelectorAll("input.bookin").forEach(el=>el.addEventListener("input",e=>{
+    const v=e.target.value.replace(/[^\d]/g,"");e.target.value=v;
+    state.rooms[Number(e.target.dataset.r)].book[e.target.dataset.k]=v;save();refreshTotals(Number(e.target.dataset.r));
+  }));
+}
+
+function onCellAct(e){
+  const el=e.currentTarget,act=el.dataset.act,r=Number(el.dataset.r);
+  if(act==="sow"){
+    e.stopPropagation();
+    const p=Number(el.dataset.p),c=pen(r,p);c.sow=!c.sow;     // タップで在/不在
+    save();updatePenCell(r,p);refreshTotals(r);
+  }else if(act==="edit"){ openEditor(r,Number(el.dataset.p)); }
+  else if(act==="medit"){ openMilky(r); }
+  else if(act==="checkall"){ SOW_PENS.forEach(p=>{pen(r,p).sow=true;});save();renderRoom(r); }
+  else if(act==="clearall"){ if(confirm("この部屋の母豚チェックを全て外しますか？")){SOW_PENS.forEach(p=>{pen(r,p).sow=false;});save();renderRoom(r);} }
+}
+function updatePenCell(r,p){
+  const el=document.getElementById(`c-${r}-${p}`);if(!el)return;
+  el.className=penClass(r,p)+"";el.innerHTML=penInner(r,p);
+  el.querySelectorAll("[data-act]").forEach(x=>x.addEventListener("click",onCellAct));
+}
+function refreshTotals(r){
+  if(view!=="room"+r)return;
+  const t=roomTotals(r),a=state.rooms[r].book;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  set("rt-sow",`${t.sow}<small>頭</small>`);set("rt-psgp",`PS ${t.sowPS} / GP ${t.sowGP}`);
+  set("rt-chk",t.checked);
+  set("rt-nur",`${t.nursing}<small>頭</small>`);set("rt-wea",`${t.weaned}<small>頭</small>`);
+  set("ck-nur",t.nursing);set("ck-wea",t.weaned);
+  const mk=(id,calc,bk)=>{const e=document.getElementById(id);if(!e)return;if(bk===""){e.textContent="";e.className="mark";}else{const ok=Number(bk)===calc;e.textContent=ok?"✔":"✕";e.className="mark "+(ok?"ok":"ng");}};
+  mk("mk-nur",t.nursing,a.nursing);mk("mk-wea",t.weaned,a.weaned);
+  syncNav();
+}
+
+/* ---------- 集計ビュー（全6部屋を1か所に集約） ---------- */
+function diffCell(calc,bk){
+  if(bk==="")return "";
+  const d=Number(bk)-calc;
+  if(d===0)return '<span class="ok">一致</span>';
+  return '<span class="ng">'+(d>0?"+":"")+d+'</span>';
+}
+function renderSum(){
+  const g=grandTotals();let rows="";
+  ROOMS.forEach(r=>{
+    const t=roomTotals(r),a=state.rooms[r].book;
+    rows+=`<tr><td class="room">${r}号室</td>
+      <td class="tnum">${t.sowPS}</td><td class="tnum">${t.sowGP}</td><td class="tnum b">${t.sow}</td>
+      <td class="tnum">${t.nursing}</td><td><input class="bookin2 tnum" inputmode="numeric" data-r="${r}" data-k="nursing" value="${a.nursing}" placeholder="—"></td><td class="dcell">${diffCell(t.nursing,a.nursing)}</td>
+      <td class="tnum">${t.weaned}</td><td><input class="bookin2 tnum" inputmode="numeric" data-r="${r}" data-k="weaned" value="${a.weaned}" placeholder="—"></td><td class="dcell">${diffCell(t.weaned,a.weaned)}</td></tr>`;
+  });
+  rows+=`<tr class="trtotal"><td class="room">合計</td>
+    <td class="tnum">${g.sowPS}</td><td class="tnum">${g.sowGP}</td><td class="tnum b">${g.sow}</td>
+    <td class="tnum">${g.nursing}</td><td class="tnum">${sumBook("nursing")}</td><td></td>
+    <td class="tnum">${g.weaned}</td><td class="tnum">${sumBook("weaned")}</td><td></td></tr>`;
+  mainEl.innerHTML=`
+    <div class="section-title">【集計】分娩舎 合計</div>
+    <div class="sumgrid">
+      <div class="bigstat"><div class="lbl">母豚 PS</div><div class="val tnum">${g.sowPS}<small>頭</small></div></div>
+      <div class="bigstat"><div class="lbl">母豚 GP</div><div class="val tnum">${g.sowGP}<small>頭</small></div></div>
+      <div class="bigstat alt"><div class="lbl">授乳子豚</div><div class="val tnum">${g.nursing}<small>頭</small></div></div>
+      <div class="bigstat alt"><div class="lbl">離乳子豚</div><div class="val tnum">${g.weaned}<small>頭</small></div></div>
+    </div>
+    <div class="section-title">全6部屋まとめ（棚卸実数 ↔ 集計頭数）</div>
+    <div style="overflow-x:auto">
+    <table class="table sumtable">
+      <thead>
+        <tr><th rowspan="2">部屋</th><th colspan="3">母豚</th><th colspan="3">授乳子豚</th><th colspan="3">離乳子豚</th></tr>
+        <tr><th>PS</th><th>GP</th><th>計</th><th>実数</th><th>集計頭数</th><th>差</th><th>実数</th><th>集計頭数</th><th>差</th></tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    </div>
+    <p class="note">「実数」は各房で数えた頭数の自動集計です。「集計頭数」に管理上の頭数を入力すると差を照合します。</p>
+    <div class="actions">
+      <button class="primary" id="btnPrint">印刷（A4縦・提出用）</button>
+      <button id="btnCsv">CSVで書き出し</button>
+    </div>
+    <div class="actions" style="margin-top:8px">
+      <button id="btnBackup">バックアップ保存</button>
+      <button id="btnRestore">バックアップ読込</button>
+      <button id="btnMerge">部屋を合算して読込</button>
+      <button class="danger" id="btnReset">この棚卸を消去</button>
+    </div>
+    <input type="file" id="restoreFile" accept="application/json,.json" style="display:none">
+    <input type="file" id="mergeFile" accept="application/json,.json" style="display:none">
+    <p class="note">「バックアップ保存」で入力内容を1つのファイル（.json）として書き出せます。Dropbox等に保存し、別の端末で「バックアップ読込」から開けば続きを編集できます。<br><b>分担入力の合算：</b>各担当者が「バックアップ保存」した.jsonを1台に集め、「部屋を合算して読込」を1ファイルずつ実行すると、入力済みの部屋だけが取り込まれ、他の部屋は消えずに合算されます（同じ部屋を2人が入力した場合は後から読み込んだ方が優先）。</p>`;
+  mainEl.querySelectorAll("input.bookin2").forEach(el=>el.addEventListener("input",e=>{
+    const v=e.target.value.replace(/[^\d]/g,"");e.target.value=v;
+    state.rooms[Number(e.target.dataset.r)].book[e.target.dataset.k]=v;save();
+    const r=Number(e.target.dataset.r),t=roomTotals(r),a=state.rooms[r].book,k=e.target.dataset.k;
+    const tr=e.target.closest("tr"),cells=tr.querySelectorAll("td");
+    if(k==="nursing")cells[6].innerHTML=diffCell(t.nursing,a.nursing);else cells[9].innerHTML=diffCell(t.weaned,a.weaned);
+    syncNav();
+  }));
+  document.getElementById("btnCsv").addEventListener("click",exportCsv);
+  document.getElementById("btnPrint").addEventListener("click",()=>{buildPrintDoc();window.print();});
+  document.getElementById("btnBackup").addEventListener("click",exportBackup);
+  const rf=document.getElementById("restoreFile");
+  document.getElementById("btnRestore").addEventListener("click",()=>rf.click());
+  rf.addEventListener("change",e=>{if(e.target.files&&e.target.files[0])importBackup(e.target.files[0],"replace");e.target.value="";});
+  const mf=document.getElementById("mergeFile");
+  document.getElementById("btnMerge").addEventListener("click",()=>mf.click());
+  mf.addEventListener("change",e=>{if(e.target.files&&e.target.files[0])importBackup(e.target.files[0],"merge");e.target.value="";});
+  document.getElementById("btnReset").addEventListener("click",()=>{
+    if(confirm("現在の入力内容をすべて消去して新しい棚卸を始めますか？")){
+      state=freshState();document.getElementById("mDate").value=state.meta.date;document.getElementById("mRec").value="";save();render();
+    }
+  });
+}
+
+/* ---------- エディタ（子豚カウント） ---------- */
+let edit={r:null,p:null,milky:false,draft:null};
+function openEditor(r,p){edit={r,p,milky:false,draft:JSON.parse(JSON.stringify(pen(r,p)))};drawSheet();show();}
+function openMilky(r){edit={r,p:null,milky:true,draft:JSON.parse(JSON.stringify(state.rooms[r].milky))};drawSheet();show();}
+function show(){document.getElementById("scrim").classList.add("show");}
+function closeEditor(){document.getElementById("scrim").classList.remove("show");}
+function pickerHTML(k,val){
+  const chips=[0,8,9,10,11,12,13];
+  const inList=chips.indexOf(Number(val))>=0;
+  return `<div class="picker" data-k="${k}">`+
+    chips.map(v=>`<button class="chip ${Number(val)===v?"on":""}" data-k="${k}" data-v="${v}">${v}</button>`).join("")+
+    `<input class="manual" data-k="${k}" inputmode="numeric" value="${inList?"":val}" placeholder="他"></div>`;
+}
+function drawSheet(){
+  const d=edit.draft,sheet=document.getElementById("sheet");
+  if(edit.milky){
+    sheet.innerHTML=`
+      <h3>${edit.r}号室 ミルキー室</h3>
+      <div class="sub">母豚なし。授乳子豚・離乳子豚それぞれの頭数を選びます。</div>
+      <div class="fieldlbl">授乳子豚（頭）</div>
+      ${pickerHTML("nursing",d.nursing||0)}
+      <div class="fieldlbl">離乳子豚（頭）</div>
+      ${pickerHTML("weaned",d.weaned||0)}
+      <div class="sheet-actions"><button class="clear" id="btnClear">空にする</button><button class="done" id="btnDone">完了</button></div>`;
+  }else{
+    sheet.innerHTML=`
+      <h3>${penLabel(edit.r,edit.p)}</h3>
+      <div class="sub">母豚の有無と子豚の頭数を選びます（母豚あり→授乳／なし→離乳）。</div>
+      <div class="fieldlbl">母豚</div>
+      <div class="seg2" id="segSow">
+        <button data-sow="1" class="${d.sow?'on':''}">母豚あり</button>
+        <button data-sow="0" class="${!d.sow?'on':''}">なし</button>
+      </div>
+      <div class="fieldlbl" id="pigLbl">${d.sow?"授乳子豚（頭）":"離乳子豚（頭）"}</div>
+      ${pickerHTML("piglets",d.piglets||0)}
+      <div class="sheet-actions"><button class="clear" id="btnClear">空にする</button><button class="done" id="btnDone">完了</button></div>`;
+    sheet.querySelectorAll("#segSow button").forEach(b=>b.addEventListener("click",()=>{d.sow=(b.dataset.sow==="1");drawSheet();}));
+  }
+  sheet.querySelectorAll(".picker .chip").forEach(b=>b.addEventListener("click",()=>{
+    const k=b.dataset.k;d[k]=Number(b.dataset.v);
+    const pk=b.parentElement;pk.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===b));
+    const man=pk.querySelector(".manual");if(man)man.value="";
+  }));
+  sheet.querySelectorAll(".picker .manual").forEach(inp=>inp.addEventListener("input",e=>{
+    const k=e.target.dataset.k,raw=e.target.value.replace(/[^\d]/g,"");e.target.value=raw;
+    const v=Number(raw)||0;d[k]=v;
+    e.target.parentElement.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",raw!==""&&Number(c.dataset.v)===v));
+  }));
+  sheet.querySelector("#btnClear").addEventListener("click",()=>{edit.draft=edit.milky?{nursing:0,weaned:0}:{sow:edit.draft.sow,piglets:0};drawSheet();});
+  sheet.querySelector("#btnDone").addEventListener("click",commitEditor);
+}
+function commitEditor(){
+  if(edit.milky){state.rooms[edit.r].milky={nursing:Number(edit.draft.nursing)||0,weaned:Number(edit.draft.weaned)||0};}
+  else{state.rooms[edit.r].pens[edit.p]={sow:!!edit.draft.sow,piglets:Number(edit.draft.piglets)||0};}
+  save();closeEditor();
+  if(edit.milky){const el=document.querySelector(`.pen.milky[data-r="${edit.r}"]`);if(el){el.innerHTML=milkyInner(edit.r);el.querySelectorAll("[data-act]").forEach(x=>x.addEventListener("click",onCellAct));}}
+  else{updatePenCell(edit.r,edit.p);}
+  refreshTotals(edit.r);
+}
+document.getElementById("scrim").addEventListener("click",e=>{if(e.target.id==="scrim")commitEditor();});
+
+/* ---------- 印刷ドキュメント生成（A4横・提出用） ---------- */
+function jdate(iso){if(!iso)return "　　　年　　月　　日";const p=iso.split("-");return p.length===3?`${p[0]}年${Number(p[1])}月${Number(p[2])}日`:iso;}
+function buildPrintDoc(){
+  const g=grandTotals();
+  let body="";
+  ROOMS.forEach(r=>{
+    const t=roomTotals(r),a=state.rooms[r].book;
+    const nd=a.nursing===""?"":Number(a.nursing)-t.nursing;
+    const wd=a.weaned===""?"":Number(a.weaned)-t.weaned;
+    const dtxt=d=>d===""?"":(d===0?"一致":(d>0?"+"+d:""+d));
+    const dcls=d=>(d!==""&&d!==0)?"ng":"";
+    body+=`<tr>
+      <td class="room">${r}号室</td>
+      <td>${t.sowPS}</td><td>${t.sowGP}</td><td class="big">${t.sow}</td>
+      <td>${t.nursing}</td><td>${a.nursing===""?"―":a.nursing}</td><td class="${dcls(nd)}">${dtxt(nd)}</td>
+      <td>${t.weaned}</td><td>${a.weaned===""?"―":a.weaned}</td><td class="${dcls(wd)}">${dtxt(wd)}</td>
+    </tr>`;
+  });
+  const bn=sumBook("nursing"),bw=sumBook("weaned");
+  body+=`<tr class="total">
+    <td class="room">合計</td>
+    <td>${g.sowPS}</td><td>${g.sowGP}</td><td>${g.sow}</td>
+    <td>${g.nursing}</td><td>${bn===""?"―":bn}</td><td></td>
+    <td>${g.weaned}</td><td>${bw===""?"―":bw}</td><td></td>
+  </tr>`;
+  document.getElementById("printdoc").innerHTML=`
+    <div class="pd-head">
+      <div class="pd-title">古井農場　分娩舎　棚卸表</div>
+      <div class="pd-headright">記入日：${jdate(state.meta.date)}　／　記録者：<span class="nm">${state.meta.recorder||"　　　　　　　　"}</span></div>
+    </div>
+    <table class="pd-table">
+      <colgroup><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:8%"><col style="width:9%"><col style="width:10%"><col style="width:8%"></colgroup>
+      <thead>
+        <tr><th rowspan="2">部屋</th><th colspan="3" class="grp">母豚</th><th colspan="3" class="grp">授乳子豚</th><th colspan="3" class="grp">離乳子豚</th></tr>
+        <tr><th>PS</th><th>GP</th><th>計</th><th>棚卸<br>実数</th><th>集計<br>頭数</th><th>差</th><th>棚卸<br>実数</th><th>集計<br>頭数</th><th>差</th></tr>
+      </thead>
+      <tbody>${body}</tbody>
+    </table>
+    <div class="pd-sub">※「棚卸実数」は各房で数えた頭数の集計。「集計頭数」は管理上の頭数（手入力）。差は［集計頭数−棚卸実数］。</div>
+    <div class="pd-secttl">各部屋 房別明細（上＝奥／下＝手前・中央＝ミルキー室　／ 緑「母」=母豚あり(授乳)・橙=離乳子豚・青=ミルキー(授乳/離乳)　数字＝子豚頭数）</div>
+    <div class="pd-rooms">${ROOMS.map(pdRoom).join("")}</div>`;
+}
+function pdRoom(r){
+  const t=roomTotals(r);
+  const cell=(p)=>{
+    const c=pen(r,p);const pg=c.piglets||0;let cls="";
+    if(c.sow)cls="ps";else if(pg)cls="wean";
+    let v=c.sow?"母":"";if(pg)v+=(c.sow?" ":"")+pg;
+    return `<div class="pd-cell ${cls}"><span class="n">${p}</span><span class="v">${v||""}</span></div>`;
+  };
+  const col=(rows,c)=>rows.map(row=>cell(penAt(row,c))).join("");
+  const full=[...Array(ROWS)].map((_,i)=>i+1);
+  const inner=[...Array(ROWS-1)].map((_,i)=>i+1);
+  const m=state.rooms[r].milky;const mn=m.nursing||0,mw=m.weaned||0;
+  const milky=`<div class="pd-cell milky"><span class="n">ﾐﾙｸｰ</span><span class="v">${mn?"授"+mn:""}${mw?(mn?" ":"")+"離"+mw:""}</span></div>`;
+  return `<div class="pd-room">
+    <div class="pd-rtitle">${r}号室 母${t.sow}(P${t.sowPS}/G${t.sowGP}) 授${t.nursing} 離${t.weaned}</div>
+    <div class="pd-grid">
+      <div class="pd-col">${col(full,1)}</div>
+      <div class="pd-center"><div class="pd-ctop"><div class="pd-col">${col(inner,2)}</div><div class="pd-col">${col(inner,3)}</div></div>${milky}</div>
+      <div class="pd-col">${col(full,4)}</div>
+    </div>
+  </div>`;
+}
+window.addEventListener("beforeprint",buildPrintDoc);
+
+/* ---------- バックアップ（端末非依存の保存／読込） ---------- */
+function exportBackup(){
+  const data=JSON.stringify({app:"furui-bunben",ver:2,saved:new Date().toISOString(),state:state});
+  const blob=new Blob([data],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`分娩舎棚卸_保存_${state.meta.date||"data"}.json`;a.click();URL.revokeObjectURL(url);
+}
+function roomFilled(rm){
+  if(!rm) return false;
+  if((Number(rm.ps)||0)||(Number(rm.gp)||0)) return true;
+  if(rm.book&&(rm.book.nursing!==""&&rm.book.nursing!=null||rm.book.weaned!==""&&rm.book.weaned!=null)) return true;
+  if(rm.milky&&((Number(rm.milky.nursing)||0)||(Number(rm.milky.weaned)||0)||(Number(rm.milky.piglets)||0))) return true;
+  if(rm.pens){for(const p in rm.pens){const c=rm.pens[p];if(c&&(c.sow||(Number(c.piglets)||0)||(Number(c.nursing)||0)||(Number(c.weaned)||0)))return true;}}
+  return false;
+}
+function importBackup(file,mode){
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const obj=JSON.parse(rd.result);
+      const s=obj&&obj.state?obj.state:obj;
+      if(!s||!s.rooms||!s.meta) throw new Error("format");
+      migrate(s);
+      if(mode==="merge"){
+        let added=[];
+        ROOMS.forEach(r=>{ if(roomFilled(s.rooms[r])){ state.rooms[r]=s.rooms[r]; added.push(r); } });
+        if(!state.meta.recorder&&s.meta.recorder) state.meta.recorder=s.meta.recorder;
+        if(!state.meta.date&&s.meta.date) state.meta.date=s.meta.date;
+        save();
+        elDate.value=state.meta.date||"";elRec.value=state.meta.recorder||"";
+        view="sum";render();
+        alert(added.length?`${added.map(r=>r+"号室").join("・")} を取り込み、合算しました。`:"このファイルには入力済みの部屋がありませんでした。");
+      }else{
+        state=s;save();
+        elDate.value=state.meta.date||"";elRec.value=state.meta.recorder||"";
+        view="sum";render();
+        alert("バックアップを読み込みました（全体を置き換え）。");
+      }
+    }catch(e){
+      alert("読み込めませんでした。「バックアップ保存」で書き出した .json ファイルを選んでください。");
+    }
+  };
+  rd.readAsText(file);
+}
+
+/* ---------- CSV ---------- */
+function exportCsv(){
+  const g=grandTotals();let rows=[];
+  rows.push(["古井農場 分娩舎 棚卸表"]);
+  rows.push(["記入日",state.meta.date,"記録者",state.meta.recorder]);rows.push([]);
+  rows.push(["部屋","豚房","母豚","子豚","区分"]);
+  ROOMS.forEach(r=>{
+    SOW_PENS.forEach(p=>{const c=pen(r,p);const pg=c.piglets||0;rows.push([r+"号室",penLabel(r,p),c.sow?"○":"",pg,c.sow?"授乳":(pg?"離乳":"")]);});
+    const m=state.rooms[r].milky;
+    rows.push([r+"号室",r+"-ミルキー","",m.nursing||0,"授乳"]);
+    rows.push([r+"号室",r+"-ミルキー","",m.weaned||0,"離乳"]);
+  });
+  rows.push([]);
+  rows.push(["部屋","母豚PS","母豚GP","母豚計","授乳(実数)","授乳(集計頭数)","授乳差","離乳(実数)","離乳(集計頭数)","離乳差"]);
+  ROOMS.forEach(r=>{const t=roomTotals(r),a=state.rooms[r].book;
+    const nd=a.nursing===""?"":Number(a.nursing)-t.nursing, wd=a.weaned===""?"":Number(a.weaned)-t.weaned;
+    rows.push([r+"号室",t.sowPS,t.sowGP,t.sow,t.nursing,a.nursing,nd,t.weaned,a.weaned,wd]);});
+  rows.push(["合計",g.sowPS,g.sowGP,g.sow,g.nursing,sumBook("nursing"),"",g.weaned,sumBook("weaned"),""]);
+  rows.push([]);
+  rows.push(["【集計】","母豚PS",g.sowPS,"母豚GP",g.sowGP,"授乳子豚",g.nursing,"離乳子豚",g.weaned]);
+  const csv="\uFEFF"+rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`分娩舎棚卸_${state.meta.date}.csv`;a.click();URL.revokeObjectURL(url);
+}
+
+/* ---------- メタ ---------- */
+const elDate=document.getElementById("mDate"),elRec=document.getElementById("mRec");
+elDate.value=state.meta.date;elRec.value=state.meta.recorder;
+elDate.addEventListener("change",e=>{state.meta.date=e.target.value;save();});
+elRec.addEventListener("input",e=>{state.meta.recorder=e.target.value;save();});
+
+buildNav();render();
+</script>
+</body>
+</html>
