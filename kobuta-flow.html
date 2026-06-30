@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>古井農場 子豚舎 棚卸 提出までの流れ</title>
+<style>
+  :root{
+    --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
+    --line:#d3cfc1; --line-strong:#b4ae9c;
+    --sow:#2f6b46; --sow-soft:#e3efe6; --milky:#3a6ea5; --milky-soft:#e3edf6;
+    --wean:#b07d2a; --wean-soft:#f6efdd; --accent:#23241f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:13mm 14mm 11mm}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--accent);padding-bottom:8px;margin-bottom:13px;gap:12px}
+  h1{font-size:23px;font-weight:800;letter-spacing:.02em}
+  header .sub{font-size:12.5px;color:var(--ink-soft);text-align:right;line-height:1.4}
+  .prep{display:flex;gap:10px;background:#faf8f1;border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:14px;font-size:13.5px}
+  .prep .pl{font-weight:800;color:var(--accent);white-space:nowrap}
+  .prep b{color:var(--ink)}
+
+  .stage{display:flex;gap:14px;border:1.5px solid var(--line-strong);border-left-width:8px;border-radius:12px;padding:15px 16px;background:var(--panel)}
+  .stage.s1{border-left-color:var(--sow)}
+  .stage.s2{border-left-color:var(--milky)}
+  .stage.s3{border-left-color:var(--wean)}
+  .stage.s4{border-left-color:var(--accent)}
+  .stage .no{flex:0 0 36px}
+  .badge{width:36px;height:36px;border-radius:50%;color:#fff;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+  .s1 .badge{background:var(--sow)} .s2 .badge{background:var(--milky)} .s3 .badge{background:var(--wean)} .s4 .badge{background:var(--accent)}
+  .stage .body{flex:1}
+  .stage .head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+  .stage .t{font-size:18.5px;font-weight:800;line-height:1.25}
+  .who{font-size:12px;font-weight:800;border-radius:20px;padding:3px 12px;white-space:nowrap}
+  .s1 .who{background:var(--sow-soft);color:var(--sow);border:1px solid var(--sow)}
+  .s2 .who{background:var(--milky-soft);color:var(--milky);border:1px solid var(--milky)}
+  .s3 .who{background:var(--wean-soft);color:var(--wean);border:1px solid var(--wean)}
+  .s4 .who{background:#e7e6e1;color:var(--accent);border:1px solid var(--ink-soft)}
+  ul{list-style:none;margin-top:3px}
+  ul li{font-size:14px;color:var(--ink-soft);padding-left:17px;position:relative;margin:4px 0}
+  ul li::before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--line-strong)}
+  ul li b{color:var(--ink)}
+  .pill{display:inline-block;font-weight:800;font-size:12.5px;border-radius:5px;padding:1px 7px;background:#f0ede2;border:1px solid var(--line-strong);color:var(--ink)}
+  .three{display:flex;gap:10px;flex-wrap:wrap;margin-top:5px}
+  .three .m{flex:1;min-width:160px;border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:13px}
+  .three .m b{display:block;color:var(--milky);font-size:13.5px;margin-bottom:1px}
+  .arrow{display:flex;justify-content:center;align-items:center;height:30px}
+  .arrow span{color:var(--ink-soft);font-size:22px;line-height:1}
+  .row{display:flex;flex-direction:column;gap:0}
+  .stack>*+*{margin-top:0}
+  .stack .stage{margin:0}
+
+  .caution{margin-top:14px;border:1px solid #d9a99b;background:#fbf3ef;border-radius:10px;padding:11px 15px}
+  .caution h3{font-size:14.5px;font-weight:800;color:#a83a26;margin-bottom:4px}
+  .caution ul li{font-size:13px;margin:3px 0}
+  .caution ul li::before{background:#c8745f}
+  footer{margin-top:12px;border-top:1px solid var(--line);padding-top:8px;font-size:11.5px;color:var(--ink-soft);display:flex;justify-content:space-between}
+  @page{size:A4 portrait;margin:0}
+  @media print{ body{background:#fff} .sheet{max-width:none;margin:0;padding:11mm 12mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>子豚舎 棚卸　提出までの流れ</h1>
+    <div class="sub">古井農場<br>スマホ分担入力 → iPad合算 → PDF → 繁殖事務所メール</div>
+  </header>
+
+  <div class="prep">
+    <span class="pl">事前に</span>
+    <span>① <b>部屋の分担を重ならないように決める</b>（例：A＝1〜3号室／B＝4〜6号室／C＝7・8号室）　② 最後にまとめる <b>iPad担当を1人</b>決める</span>
+  </div>
+
+  <div class="stack">
+    <div class="stage s1">
+      <div class="no"><div class="badge">1</div></div>
+      <div class="body">
+        <div class="head"><div class="t">担当の部屋を入力して保存する</div><span class="who">スマホ ×人数</span></div>
+        <ul>
+          <li>共有リンク（またはホーム画面アイコン）でアプリを開く</li>
+          <li>自分の<b>担当の号室</b>を入力：各房の<b>頭数</b>と<b>体重</b>（中央＝通路／右列1〜8・左列9〜16）</li>
+          <li>「集計・チェック」→ <span class="pill">バックアップ保存</span> で <b>.json</b> を書き出す（各自の入力分）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arrow"><span>▼</span></div>
+
+    <div class="stage s2">
+      <div class="no"><div class="badge">2</div></div>
+      <div class="body">
+        <div class="head"><div class="t">各自の .json を iPad に集める</div><span class="who">どれか1つ</span></div>
+        <div class="three">
+          <div class="m"><b>AirDrop</b>その場で速い・通信不要。.jsonを長押し→共有→iPadを選ぶ</div>
+          <div class="m"><b>LINE WORKS</b>トークに .json をファイル添付で送る</div>
+          <div class="m"><b>Dropbox</b>共有フォルダに各自が .json を保存</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"><span>▼</span></div>
+
+    <div class="stage s3">
+      <div class="no"><div class="badge">3</div></div>
+      <div class="body">
+        <div class="head"><div class="t">iPadで合算する</div><span class="who">iPad ×1台</span></div>
+        <ul>
+          <li>まず「集計・チェック」→ <span class="pill">この棚卸を消去</span> で新規状態にする</li>
+          <li><span class="pill">部屋を合算して読込</span> をタップ → <b>1人目→2人目…と1ファイルずつ</b>読み込む（「◯号室を合算」と表示）</li>
+          <li>上部に <b>記入日</b>・<b>記録者（全員の名前）</b>を入力 → 8部屋そろっているか照合で確認</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="arrow"><span>▼</span></div>
+
+    <div class="stage s4">
+      <div class="no"><div class="badge">4</div></div>
+      <div class="body">
+        <div class="head"><div class="t">PDFにして繁殖事務所へメール送信</div><span class="who">iPad ×1台</span></div>
+        <ul>
+          <li><span class="pill">印刷（A4縦・提出用）</span> をタップ（プリンタは選ばなくてよい）</li>
+          <li>プレビュー右上の<b>共有ボタン（□に↑）</b>→「<b>メール</b>」を選ぶ（棚卸表が<b>PDFで添付</b>される）</li>
+          <li>宛先に <b>繁殖事務所</b> <span class="pill">h-koi@mnet.ne.jp</span>、件名（例：子豚舎 棚卸 ◯月）を入れて<b>送信</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="caution">
+    <h3>！ ここに注意</h3>
+    <ul>
+      <li>PDFは必ず<b>アプリの「印刷（A4縦）」</b>から作る。Safariの「PDFで書き出し」は提出用レイアウトにならない。</li>
+      <li>同じ部屋を2人が入力すると、<b>後から合算した方で上書き</b>される。分担は重ねない。</li>
+      <li>余白は「<b>既定</b>」、ヘッダー/フッターは<b>オフ</b>で1枚にきれいに収まる。</li>
+      <li>送信後の控えに、合算したiPadで <span class="pill">バックアップ保存</span> して .json を残す（Dropbox等へ）。</li>
+    </ul>
+  </div>
+
+  <footer>
+    <span>古井農場　子豚舎 棚卸システム　提出フロー</span>
+    <span>困ったときは管理者へ</span>
+  </footer>
+</div>
+</body>
+</html>

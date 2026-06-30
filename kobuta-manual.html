@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>古井農場 子豚舎 棚卸 操作マニュアル</title>
+<style>
+  :root{
+    --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
+    --line:#d3cfc1; --line-strong:#b4ae9c;
+    --sow:#2f6b46; --sow-soft:#e3efe6; --milky:#3a6ea5; --milky-soft:#e3edf6;
+    --wean:#b07d2a; --wean-soft:#f6efdd; --accent:#23241f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:12mm 13mm 10mm}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--accent);padding-bottom:7px;margin-bottom:11px;gap:12px}
+  h1{font-size:21px;font-weight:800;letter-spacing:.02em}
+  header .sub{font-size:12px;color:var(--ink-soft);text-align:right;line-height:1.4}
+  .lead{font-size:14px;color:var(--ink-soft);margin-bottom:13px}
+  .open{background:var(--milky-soft);border:1px solid var(--milky);border-radius:10px;padding:11px 14px;font-size:14px;margin-bottom:14px}
+  .open b{color:var(--milky)}
+  .steps{display:flex;flex-direction:column;gap:11px}
+  .step{display:flex;gap:13px;align-items:flex-start}
+  .num{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--sow);color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .step .body{flex:1}
+  .step .t{font-size:17px;font-weight:800;line-height:1.3}
+  .step .d{font-size:13.5px;color:var(--ink-soft);margin-top:2px}
+  .step .d b{color:var(--ink)}
+  .layout{display:flex;gap:14px;background:#faf8f1;border:1px solid var(--line);border-radius:10px;padding:11px 14px;margin:14px 0 12px;font-size:13px;align-items:center}
+  .layout .diagram{flex:0 0 132px}
+  .layout .lx{flex:1}
+  .layout .lx b{color:var(--ink)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+  .card{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .card.warn{background:#fbf3ef;border-color:#d9a99b}
+  .card.ok{background:var(--sow-soft);border-color:var(--sow)}
+  .card h3{font-size:15px;font-weight:800;margin-bottom:5px}
+  .card.warn h3{color:#a83a26}
+  .card.ok h3{color:var(--sow)}
+  .card p{font-size:13px;color:var(--ink-soft)}
+  .card p b{color:var(--ink)}
+  .pill{display:inline-block;font-weight:800;font-size:12px;border-radius:5px;padding:0 6px;background:#f0ede2;border:1px solid var(--line-strong);color:var(--ink)}
+  footer{margin-top:14px;border-top:1px solid var(--line);padding-top:9px;font-size:12px;color:var(--ink-soft);display:flex;justify-content:space-between}
+  @page{size:A4 portrait;margin:0}
+  @media print{ body{background:#fff} .sheet{max-width:none;margin:0;padding:11mm 12mm} }
+  /* mini diagram */
+  .dia{width:132px;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;font-size:9px;background:#fff}
+  .dia .ohead,.dia .ofoot{text-align:center;background:#efece2;color:var(--ink-soft);font-weight:700;padding:1px 0}
+  .dia .drow{display:grid;grid-template-columns:1fr 10px 1fr;gap:2px;padding:2px}
+  .dia .dc{border:1px solid var(--line);border-radius:3px;text-align:center;font-weight:800;color:var(--sow);background:var(--sow-soft)}
+  .dia .da{background:repeating-linear-gradient(180deg,var(--line-strong) 0 3px,transparent 3px 6px)}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>子豚舎 棚卸　操作マニュアル</h1>
+    <div class="sub">古井農場<br>iPad・スマホで操作</div>
+  </header>
+
+  <p class="lead">子豚舎の棚卸を、各号室を回りながら入力 → 1枚印刷して提出するための手順です。順番どおりに進めてください。</p>
+
+  <div class="open">① <b>開き方</b>：ホーム画面の「子豚舎棚卸」アイコン（または LINE WORKS のリンク）をタップして開きます。文字（コード）が表示される場合は、リンクをブラウザ（Safari）で開いてください。</div>
+
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div class="body"><div class="t">記入日・記録者を入力</div><div class="d">画面いちばん上で<b>記入日</b>と<b>記録者</b>（複数名は空白で区切り）を入れる。</div></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><div class="t">号室を選ぶ</div><div class="d">上のタブで<b>1号室〜8号室</b>を選ぶ。部屋を移動するたびに切り替える。</div></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><div class="t">各房に頭数と体重を入力</div><div class="d">各房の枠に<b>頭数（頭）</b>と<b>体重（kg）</b>を入力。中央＝通路、上＝奥／下＝手前・入口。房の並びは下の図のとおり。</div></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><div class="t">体重区分は自動で集計</div><div class="d">体重から <b>10／20／30／40kg</b> に自動分類（5〜15→10／15〜25→20／25〜35→30／35〜→40kg）。各部屋ページ下と「集計・チェック」で確認できる。</div></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><div class="t">照合で確認</div><div class="d">各部屋・集計ページで <b>棚卸頭数（実数）</b> と <b>集計頭数（手入力）</b> が「一致」になるか確認（差はその場で表示）。</div></div></div>
+    <div class="step"><div class="num">6</div><div class="body"><div class="t">印刷して提出</div><div class="d">「集計・チェック」で <span class="pill">印刷（A4縦・提出用）</span> を押す → A4縦1枚で出力。余白は「既定」、背景のグラフィックON、ヘッダー/フッターはオフ。</div></div></div>
+  </div>
+
+  <div class="layout">
+    <div class="diagram">
+      <div class="dia">
+        <div class="ohead">奥</div>
+        <div class="drow"><div class="dc">9</div><div class="da"></div><div class="dc">8</div></div>
+        <div class="drow"><div class="dc">10</div><div class="da"></div><div class="dc">7</div></div>
+        <div class="drow"><div class="dc">…</div><div class="da"></div><div class="dc">…</div></div>
+        <div class="drow"><div class="dc">16</div><div class="da"></div><div class="dc">1</div></div>
+        <div class="ofoot">手前・入口</div>
+      </div>
+    </div>
+    <div class="lx"><b>房の並び：</b>中央が通路。<b>右列＝手前①〜奥⑧</b>、<b>左列＝奥⑨〜手前⑯</b>。立っている向き（手前から奥）と画面の上下が同じなので、目の前の房をそのままタップして入力できます。</div>
+  </div>
+
+  <div class="grid2">
+    <div class="card ok"><h3>★ 終わったら必ず：バックアップ保存</h3><p>「集計・チェック」下の<b>「バックアップ保存」</b>を押し、出てきたファイル（.json）を<b>Dropbox</b>等に保存。次回や別端末で「バックアップ読込」から続けられます。</p></div>
+    <div class="card warn"><h3>！ データは“その端末だけ”に保存</h3><p>入力は自動で他の人に共有されません。<b>1台で担当</b>するか、部屋ごとに分担した場合は各自の<b>.json</b>を集めて1台で読込・<b>合算</b>してから印刷してください。</p></div>
+  </div>
+
+  <footer><span>古井農場　子豚舎 棚卸システム　操作マニュアル</span><span>困ったときは管理者へ</span></footer>
+</div>
+</body>
+</html>
