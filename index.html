@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0049)file:///C:/Users/hikoc/Downloads/index%20(3).html -->
-<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>古井農場 分娩舎 棚卸</title>
 <style>
@@ -253,269 +253,8 @@
   <div id="saveState">保存済み</div>
 </header>
 
-<nav id="nav"><button data-view="room1" class="active">1号室<span class="dot"></span></button><button data-view="room2">2号室<span class="dot"></span></button><button data-view="room3">3号室<span class="dot"></span></button><button data-view="room4">4号室<span class="dot"></span></button><button data-view="room5">5号室<span class="dot"></span></button><button data-view="room6">6号室<span class="dot"></span></button><button class="sum" data-view="sum">集計・チェック</button></nav>
-<main id="main">
-    <div class="room-head"><h2>1号室</h2><span class="hint">母豚は「母豚」をタップでチェック（全部チェック可）。子豚は下段タップで頭数を選択。母豚あり→授乳／なし→離乳に自動分類。</span></div>
-
-    <div class="roomctl">
-      <div class="psgp">
-        <span class="ttl">母豚頭数</span>
-        <label>PS<input class="psin tnum" inputmode="numeric" data-r="1" data-k="ps" value="0"></label>
-        <label>GP<input class="psin tnum" inputmode="numeric" data-r="1" data-k="gp" value="0"></label>
-        <span class="chkinfo">在室チェック <b id="rt-chk">0</b> 房</span>
-      </div>
-      <div class="ckbtns">
-        <button class="ckall" data-act="checkall" data-r="1">全部チェック</button>
-        <button class="ckclr" data-act="clearall" data-r="1">全解除</button>
-      </div>
-    </div>
-
-    <div class="legend">
-      <span><i style="background:var(--sow-soft);border-color:var(--sow)"></i>母豚あり（授乳）</span>
-      <span><i style="background:var(--wean-soft);border-color:var(--wean)"></i>離乳子豚</span>
-      <span><i style="background:var(--milky-soft);border-color:var(--milky)"></i>ミルキー室</span>
-      <span><i style="background:#fff"></i>空房</span>
-    </div>
-    <div class="orient"><span class="ln"></span><span>奥</span><span class="ln"></span></div>
-    <div class="floorwrap"><div class="floorrow">
-      <div class="fcol"><div class="pen" id="c-1-13"><div class="pno tnum">13</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="13"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="13">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-12"><div class="pno tnum">12</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="12"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="12">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-11"><div class="pno tnum">11</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="11"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="11">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-10"><div class="pno tnum">10</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="10"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="10">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-9"><div class="pno tnum">9</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="9"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="9">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-8"><div class="pno tnum">8</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="8"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="8">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-7"><div class="pno tnum">7</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="7"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="7">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-6"><div class="pno tnum">6</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="6"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="6">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-5"><div class="pno tnum">5</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="5"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="5">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-4"><div class="pno tnum">4</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="4"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="4">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-3"><div class="pno tnum">3</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="3"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="3">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-2"><div class="pno tnum">2</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="2"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="2">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-1"><div class="pno tnum">1</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="1"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="1">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div></div>
-      <div class="fcenter">
-        <div class="fcenter-top">
-          <div class="fcol"><div class="pen" id="c-1-14"><div class="pno tnum">14</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="14"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="14">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-15"><div class="pno tnum">15</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="15"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="15">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-16"><div class="pno tnum">16</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="16"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="16">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-17"><div class="pno tnum">17</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="17"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="17">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-18"><div class="pno tnum">18</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="18"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="18">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-19"><div class="pno tnum">19</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="19"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="19">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-20"><div class="pno tnum">20</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="20"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="20">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-21"><div class="pno tnum">21</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="21"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="21">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-22"><div class="pno tnum">22</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="22"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="22">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-23"><div class="pno tnum">23</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="23"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="23">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-24"><div class="pno tnum">24</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="24"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="24">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-25"><div class="pno tnum">25</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="25"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="25">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div></div>
-          <div class="fcol"><div class="pen" id="c-1-37"><div class="pno tnum">37</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="37"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="37">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-36"><div class="pno tnum">36</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="36"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="36">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-35"><div class="pno tnum">35</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="35"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="35">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-34"><div class="pno tnum">34</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="34"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="34">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-33"><div class="pno tnum">33</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="33"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="33">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-32"><div class="pno tnum">32</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="32"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="32">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-31"><div class="pno tnum">31</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="31"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="31">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-30"><div class="pno tnum">30</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="30"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="30">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-29"><div class="pno tnum">29</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="29"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="29">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-28"><div class="pno tnum">28</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="28"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="28">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-27"><div class="pno tnum">27</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="27"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="27">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-26"><div class="pno tnum">26</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="26"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="26">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div></div>
-        </div>
-        <div class="pen milky" data-r="1"><div class="pno">ミルキー室</div>
-    <div class="mlabel">母豚なし</div>
-    <div class="cnt2 " data-act="medit" data-r="1">
-      <div class="c"><span class="lab">授乳</span><span class="num tnum z">0</span></div>
-      <div class="c"><span class="lab">離乳</span><span class="num tnum z">0</span></div>
-    </div></div>
-      </div>
-      <div class="fcol"><div class="pen" id="c-1-38"><div class="pno tnum">38</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="38"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="38">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-39"><div class="pno tnum">39</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="39"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="39">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-40"><div class="pno tnum">40</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="40"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="40">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-41"><div class="pno tnum">41</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="41"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="41">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-42"><div class="pno tnum">42</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="42"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="42">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-43"><div class="pno tnum">43</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="43"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="43">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-44"><div class="pno tnum">44</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="44"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="44">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-45"><div class="pno tnum">45</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="45"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="45">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-46"><div class="pno tnum">46</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="46"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="46">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-47"><div class="pno tnum">47</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="47"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="47">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-48"><div class="pno tnum">48</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="48"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="48">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-49"><div class="pno tnum">49</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="49"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="49">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div><div class="pen" id="c-1-50"><div class="pno tnum">50</div>
-    <div class="sowchk" data-act="sow" data-r="1" data-p="50"><span class="bx"></span>母豚</div>
-    <div class="cntone " data-act="edit" data-r="1" data-p="50">
-      <span class="lab">子豚</span><span class="num tnum z">0</span>
-    </div></div></div>
-    </div></div>
-    <div class="orient" style="margin-top:6px"><span class="ln"></span><span>手前・入口（中央＝ミルキー室）</span><span class="ln"></span></div>
-
-    <div class="rtotals">
-      <div class="stat"><div class="lbl">母　豚</div><div class="val tnum" id="rt-sow">0<small>頭</small></div><div class="sub" id="rt-psgp">PS 0 / GP 0</div></div>
-      <div class="stat"><div class="lbl">授乳子豚</div><div class="val tnum" id="rt-nur">0<small>頭</small></div></div>
-      <div class="stat"><div class="lbl">離乳子豚</div><div class="val tnum" id="rt-wea">0<small>頭</small></div></div>
-    </div>
-
-    <div class="check">
-      <h3>照合（棚卸実数 ↔ 集計頭数）</h3>
-      <div class="crow">
-        <div class="clbl">授乳子豚</div>
-        <div class="cell"><span class="t">棚卸(実数)</span><span class="calc tnum" id="ck-nur">0</span></div>
-        <div class="cell"><span class="t">集計頭数</span><input class="bookin tnum" inputmode="numeric" data-r="1" data-k="nursing" value="" placeholder="—"></div>
-        <div class="mark " id="mk-nur"></div>
-      </div>
-      <div class="crow">
-        <div class="clbl">離乳子豚</div>
-        <div class="cell"><span class="t">棚卸(実数)</span><span class="calc tnum" id="ck-wea">0</span></div>
-        <div class="cell"><span class="t">集計頭数</span><input class="bookin tnum" inputmode="numeric" data-r="1" data-k="weaned" value="" placeholder="—"></div>
-        <div class="mark " id="mk-wea"></div>
-      </div>
-    </div></main>
+<nav id="nav"></nav>
+<main id="main"></main>
 
 <div class="scrim" id="scrim"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
 
@@ -841,7 +580,7 @@ function openMilky(r){edit={r,p:null,milky:true,draft:JSON.parse(JSON.stringify(
 function show(){document.getElementById("scrim").classList.add("show");}
 function closeEditor(){document.getElementById("scrim").classList.remove("show");}
 function pickerHTML(k,val){
-  const chips=[0,8,9,10,11,12,13];
+  const chips=[0,8,9,10,11,12,13,14,15];
   const inList=chips.indexOf(Number(val))>=0;
   return `<div class="picker" data-k="${k}">`+
     chips.map(v=>`<button class="chip ${Number(val)===v?"on":""}" data-k="${k}" data-v="${v}">${v}</button>`).join("")+
@@ -1038,6 +777,5 @@ elRec.addEventListener("input",e=>{state.meta.recorder=e.target.value;save();});
 
 buildNav();render();
 </script>
-
-
-</body></html>
+</body>
+</html>
