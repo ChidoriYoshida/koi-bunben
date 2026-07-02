@@ -139,9 +139,12 @@
     .pd-room{flex:0 0 calc((100% - 9mm)/4);min-width:0}
     .pd-rtitle{font-size:10px;font-weight:700;text-align:center;border:1px solid #000;background:#e8e8e8;padding:2px 0;margin-bottom:1.5px;white-space:nowrap;overflow:hidden}
     .pd-krow{display:flex;gap:1.5px;margin-bottom:1.5px}
-    .pd-cell{flex:1;min-width:0;border:1px solid #bbb;height:6.6mm;display:flex;align-items:center;justify-content:space-between;padding:0 1.5mm;overflow:hidden}
-    .pd-cell .n{font-size:8px;color:#777}
+    .pd-cell{flex:1;min-width:0;border:1px solid #bbb;height:6.6mm;display:flex;align-items:center;justify-content:space-between;padding:0 1.2mm;overflow:hidden}
+    .pd-cell .n{font-size:8px;color:#777;flex:0 0 auto}
+    .pd-cell .hw{display:flex;align-items:baseline;gap:1mm;margin-left:auto}
     .pd-cell .h{font-size:12px;font-weight:800}
+    .pd-cell .w{font-size:8.5px;color:#555}
+    .pd-cell .w:not(:empty)::before{content:"/";color:#bbb;padding-right:.3mm}
     .pd-cell.z .h{color:#ccc;font-weight:600}
     .pd-aisle{flex:0 0 5px}
     .pagebreak{page-break-before:always}
@@ -424,7 +427,7 @@ function renderSum(){
 function jdate(iso){if(!iso)return "　　　年　　月　　日";var p=iso.split("-");return p.length===3?(p[0]+"年"+Number(p[1])+"月"+Number(p[2])+"日"):iso;}
 function pdRoom(r){
   var head=roomHead(r),sub=state.rooms[r].sub;
-  function cell(p){var c=pen(r,p);var h=Number(c.head)||0;return '<div class="pd-cell'+(h?"":" z")+'"><span class="n">'+p+'</span><span class="h">'+(c.head!==""?c.head:"")+'</span></div>';}
+  function cell(p){var c=pen(r,p);var h=Number(c.head)||0;return '<div class="pd-cell'+(h?"":" z")+'"><span class="n">'+p+'</span><span class="hw"><span class="h">'+(c.head!==""?c.head:"")+'</span><span class="w">'+(c.weight!==""?c.weight+"kg":"")+'</span></span></div>';}
   var rows="";
   for(var i=0;i<ROWS;i++){
     rows+='<div class="pd-krow">'+cell(leftPen(i))+'<div class="pd-aisle"></div>'+cell(rightPen(i))+'</div>';
@@ -454,7 +457,7 @@ function buildPrintDoc(){
     '<div class="pd-sub">※「棚卸頭数（実数）」は各房の頭数の合計。「集計頭数」は管理上の頭数（手入力）。差は［集計−実数］。</div>'+
     '<div class="pd-secttl">体重区分別 頭数（子豚舎 合計）　5〜15→10／15〜25→20／25〜35→30／35〜→40kg</div>'+
     '<table class="pd-table pd-band"><thead>'+bandHead+'</thead><tbody>'+bandBody+'</tbody></table>'+
-    '<div class="pd-secttl">各部屋 房別明細（中央＝通路／右列 手前1〜奥8・左列 奥9〜手前16　数字＝頭数）</div>'+
+    '<div class="pd-secttl">各部屋 房別明細（中央＝通路／右列 手前1〜奥8・左列 奥9〜手前16　大＝頭数／小＝体重kg）</div>'+
     '<div class="pd-rooms">'+ROOMS.map(pdRoom).join("")+'</div>';
 }
 
