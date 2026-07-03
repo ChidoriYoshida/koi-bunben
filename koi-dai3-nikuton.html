@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古井第3農場　肉豚棚卸表</title>
+<style>
+:root{
+  --ink:#23241f; --paper:#f3f1e9; --panel:#fff; --line:#d3cfc1;
+  --accent:#2f6b46; --accent-soft:#e3efe6; --aisle:#ece9dd; --warn:#b23b2e;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:var(--paper);color:var(--ink);font-size:15px;}
+.app{max-width:1100px;margin:0 auto;padding:12px;}
+h1{font-size:19px;margin:4px 0 8px;color:var(--accent);}
+.meta-row{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;}
+.meta-row input{border:1px solid var(--line);border-radius:6px;padding:5px 6px;font-size:14px;}
+.meta-row label{color:#6b6a5f;}
+.tab-bar{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:6px;margin-bottom:10px;-webkit-overflow-scrolling:touch;}
+.tab-btn{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:7px 14px;font-size:14px;cursor:pointer;white-space:nowrap;}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700;}
+.tab-btn.sum-tab.active{background:var(--warn);border-color:var(--warn);}
+.tab-count{display:inline-block;min-width:20px;padding:1px 6px;margin-left:2px;border-radius:10px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;}
+.tab-btn.active .tab-count{background:rgba(255,255,255,.25);color:#fff;}
+.section{display:none;}
+.section.active{display:block;}
+.barn-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;}
+.barn-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.barn-title{font-size:17px;font-weight:700;color:var(--accent);}
+.barn-stat{font-size:13px;color:#6b6a5f;}
+.barn-stat b{font-size:20px;color:var(--ink);}
+.bulk-row{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:12px;flex-wrap:wrap;}
+.bulk-row label{font-size:13px;color:var(--accent);font-weight:700;}
+.bulk-row input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:90px;font-size:15px;}
+.bulk-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;}
+.bulk-note{font-size:11px;color:#8a897d;}
+.aisle-wrap{display:flex;justify-content:center;align-items:stretch;gap:0;}
+.pen-col{display:flex;flex-direction:column;gap:8px;flex:1;max-width:340px;}
+.aisle{width:34px;flex:0 0 34px;background:var(--aisle);margin:0 8px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.aisle span{writing-mode:vertical-rl;font-size:12px;color:#8a897d;letter-spacing:3px;}
+.single-col{display:flex;flex-direction:column;gap:8px;max-width:360px;margin:0 auto;}
+.pen{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:#fcfbf7;}
+.pen .no{flex:0 0 32px;text-align:center;font-size:18px;font-weight:700;color:var(--accent);}
+.pen .f{display:flex;flex-direction:column;flex:1;}
+.pen .f label{font-size:10px;color:#8a897d;margin-bottom:1px;}
+.pen .f input{border:1px solid var(--line);border-radius:6px;padding:6px;font-size:15px;width:100%;text-align:center;}
+.pen .f input:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+.sum-card{background:var(--accent);color:#fff;border-radius:12px;padding:16px;text-align:center;margin-bottom:14px;}
+.sum-card .lbl{font-size:13px;opacity:.85;}
+.sum-card .val{font-size:40px;font-weight:800;line-height:1.1;}
+.band-grid{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.band-chip{min-width:64px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 12px;text-align:center;}
+.band-chip .bl{font-size:11px;color:#6b6a5f;font-weight:700;}
+.band-chip .bv{font-size:22px;font-weight:800;color:var(--ink);}
+.band-chip.bx{background:#f7e7e3;border-color:#e0a99b;}
+.band-chip.bx .bl,.band-chip.bx .bv{color:var(--warn);}
+.band-note{font-size:11px;color:#8a897d;line-height:1.5;margin-bottom:14px;}
+.sec-title{font-size:15px;font-weight:700;margin:14px 0 8px;color:var(--accent);}
+table.tbl{width:100%;border-collapse:collapse;background:var(--panel);border-radius:8px;overflow:hidden;}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:7px 10px;text-align:center;font-size:14px;}
+table.tbl th{background:var(--accent-soft);color:var(--accent);}
+table.tbl tr:nth-child(even) td{background:#faf9f4;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;}
+.act{border:1px solid var(--accent);background:var(--panel);color:var(--accent);border-radius:8px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;}
+.act.primary{background:var(--accent);color:#fff;}
+.save-status{font-size:12px;color:#8a897d;text-align:center;margin-bottom:10px;min-height:16px;}
+#print-area{display:none;}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  html,body{margin:0;background:#fff;color:#000;}
+  .app{max-width:100%;padding:0;margin:0;}
+  .tab-bar,.section,.btn-row,.save-status,.meta-row,h1{display:none !important;}
+  @page{size:A4 portrait;margin:16mm 8mm 10mm 18mm;}
+  #print-area{display:block !important;padding-top:1mm;}
+  .pd-head{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:3px;margin-bottom:5px;gap:10px;}
+  .pd-title{font-size:17px;font-weight:800;line-height:1.2;}
+  .pd-headright{font-size:10.5px;font-weight:700;text-align:right;line-height:1.5;}
+  .pd-table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  .pd-table th,.pd-table td{border:1px solid #000;padding:2px 4px;text-align:center;font-size:11.5px;font-variant-numeric:tabular-nums;}
+  .pd-table thead th{background:#e8e8e8;font-weight:700;font-size:10.5px;}
+  .pd-table td.room{font-weight:700;}
+  .pd-table td.big{font-weight:800;background:#f3f3f3;}
+  .pd-table .total td{font-weight:800;background:#e0e0e0;border-top:2px solid #000;}
+  .pd-table td.ng{font-weight:800;color:#b23b2e;}
+  .pd-band th,.pd-band td{font-size:11px;padding:2px 2px;}
+  .pd-sub{font-size:8.5px;margin:1px 2px;}
+  .pd-feed2 td,.pd-feed2 th{font-size:10px;padding:1.6px 3px;}
+  .pd-feed2 td.na{color:#aaa;background:#f5f5f5;}
+  .pd-feed2 tr.grp td{border-top:1.5px solid #000;}
+  .pd-secttl{font-size:9.5px;font-weight:700;margin:5px 0 2px;}
+  .pagebreak{page-break-before:always;}
+  .pd-rooms{display:flex;flex-wrap:wrap;gap:2.5mm 2.5mm;margin-top:2mm;}
+  .pd-room{flex:0 0 calc((100% - 7.5mm)/4);min-width:0;page-break-inside:avoid;}
+  .pd-room.dbl{flex:0 0 calc((100% - 7.5mm)/4);}
+  .pd-rtitle{font-size:8.5px;font-weight:700;text-align:center;border:1px solid #000;background:#e8e8e8;padding:1.5px 0;margin-bottom:1px;white-space:nowrap;overflow:hidden;}
+  .pd-krow{display:flex;gap:1px;margin-bottom:1px;}
+  .pd-cell{flex:1;min-width:0;border:1px solid #bbb;height:4.6mm;display:flex;align-items:center;justify-content:space-between;padding:0 .6mm;overflow:hidden;}
+  .pd-cell .n{font-size:6.5px;color:#777;flex:0 0 auto;}
+  .pd-cell .hw{display:flex;align-items:baseline;gap:.6mm;margin-left:auto;}
+  .pd-cell .h{font-size:9px;font-weight:800;}
+  .pd-cell .w{font-size:6.8px;color:#555;}
+  .pd-cell .w:not(:empty)::before{content:"/";color:#bbb;padding-right:.2mm;}
+  .pd-cell.z .h{color:#ccc;font-weight:600;}
+  .pd-aisle{flex:0 0 3px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>古井第3農場　肉豚棚卸表</h1>
+  <div class="meta-row">
+    <input id="year" style="width:60px" placeholder="" inputmode="numeric" maxlength="4"><label>年</label>
+    <input id="month" style="width:42px" placeholder="" inputmode="numeric" maxlength="2"><label>月</label>
+    <input id="day" style="width:42px" placeholder="" inputmode="numeric" maxlength="2"><label>日</label>
+    <label style="margin-left:8px">記録者</label><input id="staff" style="width:120px" placeholder="氏名">
+  </div>
+
+  <div class="tab-bar" id="tabBar"></div>
+  <div id="sections"></div>
+
+  <div class="section" id="sec-sum">
+    <div class="sum-card">
+      <div class="lbl">第3農場　総頭数</div>
+      <div class="val" id="grand">0</div>
+    </div>
+    <div class="sec-title">体重区分別　頭数（全棟 合計）</div>
+    <div class="band-grid" id="bandGrid"></div>
+    <div class="band-note">体重から自動分類：25以上35未満→30／35〜45→40／45〜55→50／55〜65→60／65〜75→70／75〜85→80／85〜95→90／95〜105→100／105以上→110kg。25kg未満・体重未入力は「未分類」。</div>
+    <div class="sec-title">棟別　頭数（集計チェック）</div>
+    <table class="tbl" id="barnTable"><thead><tr><th>棟</th><th>棚卸頭数<br>（実数）</th><th>集計頭数<br>（手入力）</th><th>差</th></tr></thead><tbody id="barnTbody"></tbody>
+      <tfoot><tr><th>合計</th><th id="realTotal">0</th><th id="manTotal">—</th><th id="diffTotal">—</th></tr></tfoot>
+    </table>
+    <div class="band-note" style="margin-top:8px">「棚卸頭数（実数）」は各房の頭数の自動合計です。「集計頭数（手入力）」に管理上の頭数を入れると差を照合します（差＝集計−実数、一致で「一致」表示）。</div>
+
+    <div class="sec-title">飼料の棚卸（タンク別／単位：t）</div>
+    <table class="tbl" id="feedTable"><thead><tr><th>棟番号</th><th>タンク№</th><th>たから20<br>ペレット</th><th>たから40<br>ペレット</th><th>たから70<br>ペレット</th></tr></thead>
+      <tbody id="feedTbody"></tbody>
+      <tfoot><tr><th colspan="2">銘柄別 合計（t）</th><th id="ft-b0">0</th><th id="ft-b1">0</th><th id="ft-b2">0</th></tr></tfoot>
+    </table>
+    <div class="band-note" style="margin-top:8px">A-1〜F-4の全24タンク。各タンクに在庫のある銘柄の残数量（t）を入力すると、銘柄ごとの合計を自動集計します。</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="act" onclick="saveData(false)">データを保存</button>
+    <button class="act primary" onclick="window.print()">印刷 / PDF</button>
+    <button class="act" onclick="exportCSV()">CSVで書き出す</button>
+    <button class="act" onclick="doBackup()">バックアップ保存</button>
+    <button class="act" onclick="document.getElementById('restoreFile').click()">バックアップ復元</button>
+    <input type="file" id="restoreFile" accept="application/json" style="display:none" onchange="doRestore(event)">
+    <button class="act" style="color:var(--warn);border-color:var(--warn)" onclick="clearAll()">データをクリア</button>
+  </div>
+  <div class="save-status" id="saveStatus"></div>
+
+  <div id="print-area"></div>
+</div>
+
+<script>
+const STORE = 'furui_dai3_nikuton_v1';
+const BARNS = [
+  { id:'301', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'302', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'303', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'304', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'305', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'306', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'307', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'308', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'309', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'310', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'311', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+  { id:'312', double:true, left:[12,11,10,9,8,7,6,5,4,3,2,1], right:[13,14,15,16,17,18,19,20,21,22,23,24], pens:24 },
+];
+function circ(n){
+  if(n>=1&&n<=20) return String.fromCharCode(0x2460+n-1);
+  if(n>=21&&n<=35) return String.fromCharCode(0x3251+n-21);
+  return '('+n+')';
+}
+function penList(b){ const a=[]; for(let i=1;i<=b.pens;i++) a.push(i); return a; }
+
+let data = {};
+BARNS.forEach(b=>{ data[b.id]={}; penList(b).forEach(p=>{ data[b.id][p]={count:'',weight:''}; }); });
+let manual = {};
+BARNS.forEach(b=>{ manual[b.id]=''; });
+
+const FEED_GROUPS = [['A','301・302'],['B','303・304'],['C','305・306'],['D','307・308'],['E','309・310'],['F','311・312']];
+const TANKS = [];
+FEED_GROUPS.forEach(g=>{ for(let i=1;i<=4;i++) TANKS.push({no:g[0]+'-'+i, barns:g[1], grp:g[0], first:i===1}); });
+const BRANDS = ['たから20ペレット','たから40ペレット','たから70ペレット'];
+function tankBrands(no){ return BRANDS; }
+let feed = {};
+TANKS.forEach(t=>{ feed[t.no]={}; BRANDS.forEach(b=>feed[t.no][b]=''); });
+function feedTotals(){
+  var tot={}; BRANDS.forEach(b=>tot[b]=0);
+  TANKS.forEach(t=>{ BRANDS.forEach(b=>{ tot[b]+=parseFloat(feed[t.no][b])||0; }); });
+  return tot;
+}
+function fmt(n){ return (Math.round(n*100)/100).toString(); }
+
+const refs = {};
+
+function diffHTML(calc, book){
+  if(book===''||book==null) return '<span style="color:#8a897d">—</span>';
+  var d=Number(book)-calc;
+  if(isNaN(d)) return '<span style="color:#8a897d">—</span>';
+  if(d===0) return '<span style="color:var(--accent);font-weight:700">一致</span>';
+  return '<span style="color:var(--warn);font-weight:700">'+(d>0?'+'+d:d)+'</span>';
+}
+
+function bandOf(w){
+  if(w===''||w==null) return 0;
+  var v=parseFloat(w); if(isNaN(v)) return 0;
+  if(v>=25&&v<35) return 30;
+  if(v>=35&&v<45) return 40;
+  if(v>=45&&v<55) return 50;
+  if(v>=55&&v<65) return 60;
+  if(v>=65&&v<75) return 70;
+  if(v>=75&&v<85) return 80;
+  if(v>=85&&v<95) return 90;
+  if(v>=95&&v<105) return 100;
+  if(v>=105) return 110;
+  return 0;
+}
+function barnHead(b){ let s=0; penList(b).forEach(p=>{ s+=parseInt(data[b.id][p].count)||0; }); return s; }
+function grandHead(){ let s=0; BARNS.forEach(b=>s+=barnHead(b)); return s; }
+function computeBands(){
+  var b={30:0,40:0,50:0,60:0,70:0,80:0,90:0,100:0,110:0,x:0};
+  BARNS.forEach(bn=>{ penList(bn).forEach(p=>{
+    var d=data[bn.id][p]; var c=parseInt(d.count)||0; if(c<=0) return;
+    var bd=bandOf(d.weight); if(bd===0) b.x+=c; else b[bd]+=c;
+  });});
+  return b;
+}
+
+function penCellHTML(barnId, p){
+  return '<div class="pen">'
+    + '<div class="no">'+circ(p)+'</div>'
+    + '<div class="f"><label>頭数</label><input type="number" inputmode="numeric" min="0" data-b="'+barnId+'" data-p="'+p+'" data-k="count"></div>'
+    + '<div class="f"><label>体重kg</label><input type="number" inputmode="decimal" min="0" step="0.1" data-b="'+barnId+'" data-p="'+p+'" data-k="weight"></div>'
+    + '</div>';
+}
+
+function buildUI(){
+  const tabBar=document.getElementById('tabBar');
+  const sections=document.getElementById('sections');
+  let tabHTML='', secHTML='';
+  BARNS.forEach((b,idx)=>{
+    tabHTML += '<button class="tab-btn'+(idx===0?' active':'')+'" data-tab="'+b.id+'" onclick="switchTab(\''+b.id+'\')">'+b.id+'棟 <span class="tab-count" id="tc-'+b.id+'">0</span></button>';
+    let body='';
+    if(b.double){
+      body += '<div class="aisle-wrap">';
+      body += '<div class="pen-col">'+b.left.map(p=>penCellHTML(b.id,p)).join('')+'</div>';
+      body += '<div class="aisle"><span>通路</span></div>';
+      body += '<div class="pen-col">'+b.right.map(p=>penCellHTML(b.id,p)).join('')+'</div>';
+      body += '</div>';
+    } else {
+      const order = penList(b).slice().reverse();
+      body += '<div class="single-col">'+order.map(p=>penCellHTML(b.id,p)).join('')+'</div>';
+    }
+    secHTML += '<div class="section'+(idx===0?' active':'')+'" id="sec-'+b.id+'">'
+      + '<div class="barn-card">'
+      + '<div class="barn-head"><div class="barn-title">'+b.id+'棟</div>'
+      + '<div class="barn-stat">頭数合計 <b id="bh-'+b.id+'">0</b></div></div>'
+      + '<div class="bulk-row"><label>体重 一律入力</label>'
+      + '<input type="number" inputmode="decimal" min="0" step="0.1" id="bulk-'+b.id+'" placeholder="kg">'
+      + '<button class="bulk-btn" onclick="applyBulk(\''+b.id+'\')">この棟に一括</button>'
+      + '<span class="bulk-note">全'+b.pens+'房の体重にまとめて入力</span></div>'
+      + body
+      + '</div></div>';
+  });
+  tabBar.innerHTML = tabHTML + '<button class="tab-btn sum-tab" data-tab="sum" onclick="switchTab(\'sum\')">集計・印刷</button>';
+  sections.innerHTML = secHTML;
+
+  BARNS.forEach(b=>{ refs[b.id]={}; penList(b).forEach(p=>{ refs[b.id][p]={c:null,w:null}; }); });
+  sections.querySelectorAll('input[data-b]').forEach(inp=>{
+    const bId=inp.dataset.b, p=inp.dataset.p, k=inp.dataset.k;
+    if(k==='count') refs[bId][p].c=inp; else refs[bId][p].w=inp;
+    inp.addEventListener('input',()=>{
+      data[bId][p][k]=inp.value;
+      updateBarnStat(bId);
+      updateTotals();
+      autoSave();
+    });
+  });
+
+  // 棟別集計テーブルの行を一度だけ生成（手入力欄はここに保持）
+  const tb=document.getElementById('barnTbody');
+  tb.innerHTML=BARNS.map(bn=>
+    '<tr><td>'+bn.id+'棟</td>'
+    +'<td id="real-'+bn.id+'">0</td>'
+    +'<td><input type="number" inputmode="numeric" min="0" id="man-'+bn.id+'" data-man="'+bn.id+'" placeholder="—" style="width:80px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:15px;"></td>'
+    +'<td id="diff-'+bn.id+'">—</td></tr>'
+  ).join('');
+  tb.querySelectorAll('input[data-man]').forEach(inp=>{
+    const bId=inp.dataset.man;
+    inp.addEventListener('input',()=>{ manual[bId]=inp.value; updateTotals(); autoSave(); });
+  });
+
+  const ftb=document.getElementById('feedTbody');
+  ftb.innerHTML=TANKS.map(t=>{
+    const cells=BRANDS.map((br,bi)=>
+      '<td><input type="number" inputmode="decimal" min="0" step="0.01" id="feed-'+t.no+'-'+bi+'" data-tank="'+t.no+'" data-brand="'+bi+'" style="width:70px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:15px;"></td>'
+    ).join('');
+    const barnCell = t.first ? '<td rowspan="4" style="vertical-align:middle;font-weight:700;background:#faf9f4">'+t.barns+'</td>' : '';
+    return '<tr'+(t.first?' style="border-top:2px solid var(--line)"':'')+'>'+barnCell+'<td style="font-weight:700">'+t.no+'</td>'+cells+'</tr>';
+  }).join('');
+  ftb.querySelectorAll('input[data-tank]').forEach(inp=>{
+    const no=inp.dataset.tank, bi=parseInt(inp.dataset.brand);
+    inp.addEventListener('input',()=>{ feed[no][BRANDS[bi]]=inp.value; updateTotals(); autoSave(); });
+  });
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.tab === id);
+  });
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const sec=document.getElementById(id==='sum'?'sec-sum':'sec-'+id);
+  if(sec) sec.classList.add('active');
+  if(id==='sum') updateTotals();
+  window.scrollTo(0,0);
+}
+
+function applyBulk(barnId){
+  const val=document.getElementById('bulk-'+barnId).value;
+  if(val==='') return;
+  const b=BARNS.find(x=>x.id===barnId);
+  penList(b).forEach(p=>{
+    data[barnId][p].weight=val;
+    if(refs[barnId][p].w) refs[barnId][p].w.value=val;
+  });
+  updateTotals(); autoSave();
+}
+
+function updateBarnStat(barnId){
+  const b=BARNS.find(x=>x.id===barnId);
+  const el=document.getElementById('bh-'+barnId);
+  if(el) el.textContent=barnHead(b);
+}
+
+function updateTotals(){
+  BARNS.forEach(b=>{ updateBarnStat(b.id); var tc=document.getElementById('tc-'+b.id); if(tc) tc.textContent=barnHead(b); });
+  const g=grandHead();
+  const gEl=document.getElementById('grand'); if(gEl) gEl.textContent=g;
+  // 棟別 実数・差 を更新（手入力欄は再生成しない）
+  let gMan=0, hasMan=false;
+  BARNS.forEach(bn=>{
+    var real=barnHead(bn);
+    var rEl=document.getElementById('real-'+bn.id); if(rEl) rEl.textContent=real;
+    var man=manual[bn.id];
+    var dEl=document.getElementById('diff-'+bn.id); if(dEl) dEl.innerHTML=diffHTML(real, man);
+    if(man!==''&&man!=null){ gMan+=Number(man)||0; hasMan=true; }
+  });
+  var rtEl=document.getElementById('realTotal'); if(rtEl) rtEl.textContent=g;
+  var mtEl=document.getElementById('manTotal'); if(mtEl) mtEl.textContent=hasMan?gMan:'—';
+  var dtEl=document.getElementById('diffTotal'); if(dtEl) dtEl.innerHTML=hasMan?diffHTML(g, gMan):'—';
+  const b=computeBands();
+  const order=[30,40,50,60,70,80,90,100,110];
+  const grid=document.getElementById('bandGrid');
+  if(grid){
+    let html=order.map(k=>'<div class="band-chip"><div class="bl">'+k+'kg</div><div class="bv">'+b[k]+'</div></div>').join('');
+    if(b.x>0) html+='<div class="band-chip bx"><div class="bl">未分類</div><div class="bv">'+b.x+'</div></div>';
+    grid.innerHTML=html;
+  }
+  const tb=null;
+  updateFeedTotals();
+  buildPrint();
+}
+function updateFeedTotals(){
+  const tot=feedTotals();
+  BRANDS.forEach((br,bi)=>{ var el=document.getElementById('ft-b'+bi); if(el) el.textContent=fmt(tot[br]); });
+}
+
+function pdBarn(b){
+  const head=barnHead(b);
+  function cell(p){
+    const c=data[b.id][p]; const h=parseInt(c.count)||0;
+    const hs = c.count!==''?c.count:'';
+    const ws = c.weight!==''?c.weight+'kg':'';
+    return '<div class="pd-cell'+(h?'':' z')+'"><span class="n">'+circ(p)+'</span>'
+      +'<span class="hw"><span class="h">'+hs+'</span><span class="w">'+ws+'</span></span></div>';
+  }
+  let rows='';
+  if(b.double){
+    for(let i=0;i<b.left.length;i++){
+      rows+='<div class="pd-krow">'+cell(b.left[i])+'<div class="pd-aisle"></div>'+cell(b.right[i])+'</div>';
+    }
+  } else {
+    penList(b).slice().reverse().forEach(p=>{ rows+='<div class="pd-krow">'+cell(p)+'</div>'; });
+  }
+  return '<div class="pd-room'+(b.double?' dbl':'')+'"><div class="pd-rtitle">'+b.id+'棟 計'+head+'</div>'+rows+'</div>';
+}
+function buildPrint(){
+  const area=document.getElementById('print-area'); if(!area) return;
+  const y=val('year'), m=val('month'), d=val('day'), st=val('staff');
+  const dateStr = (y||m||d) ? ((y||'　　')+'年'+(m||'　')+'月'+(d||'　')+'日') : '　　　年　　月　　日';
+  // 照合表
+  let body='';
+  BARNS.forEach(b=>{
+    const real=barnHead(b); const man=manual[b.id];
+    const hasMan = (man!==''&&man!=null);
+    let dtxt='―', dcls='';
+    if(hasMan){ const df=Number(man)-real; if(!isNaN(df)){ dtxt=(df===0?'一致':(df>0?'+'+df:''+df)); dcls=(df!==0)?'ng':''; } }
+    body+='<tr><td class="room">'+b.id+'棟</td><td class="big">'+real+'</td><td>'+(hasMan?man:'―')+'</td><td class="'+dcls+'">'+(hasMan?dtxt:'―')+'</td></tr>';
+  });
+  const g=grandHead();
+  body+='<tr class="total"><td class="room">合計</td><td>'+g+'</td><td></td><td></td></tr>';
+  // 体重区分
+  const bb=computeBands(); const order=[30,40,50,60,70,80,90,100,110]; const showX=bb.x>0;
+  const tot=order.reduce((a,k)=>a+bb[k],0)+bb.x;
+  const bandHead='<tr><th>区分</th>'+order.map(k=>'<th>'+k+'kg</th>').join('')+(showX?'<th>未分類</th>':'')+'<th>計</th></tr>';
+  const bandBody='<tr><td class="room">頭数</td>'+order.map(k=>'<td class="big">'+bb[k]+'</td>').join('')+(showX?'<td class="big">'+bb.x+'</td>':'')+'<td class="big">'+tot+'</td></tr>';
+  area.innerHTML=
+    '<div class="pd-head"><div class="pd-title">古井第3農場　棚卸表</div>'
+    + '<div class="pd-headright">記入日：'+dateStr+'　／　記録者：'+(st||'　　　　　　')+'</div></div>'
+    + '<table class="pd-table"><colgroup><col style="width:25%"><col style="width:26%"><col style="width:27%"><col style="width:22%"></colgroup>'
+    + '<thead><tr><th>棟</th><th>棚卸頭数（実数）</th><th>集計頭数（手入力）</th><th>差</th></tr></thead>'
+    + '<tbody>'+body+'</tbody></table>'
+    + '<div class="pd-sub">※「棚卸頭数（実数）」は各房の頭数の合計。「集計頭数」は管理上の頭数（手入力）。差は［集計−実数］。</div>'
+    + '<div class="pd-secttl">体重区分別 頭数（全棟 合計）　25〜35→30／35〜45→40／45〜55→50／55〜65→60／65〜75→70／75〜85→80／85〜95→90／95〜105→100／105〜→110kg</div>'
+    + '<table class="pd-table pd-band"><thead>'+bandHead+'</thead><tbody>'+bandBody+'</tbody></table>'
+    + '<div class="pd-secttl">飼料の棚卸（タンク別／単位：t　銘柄別合計を下段に集計）</div>'
+    + feedTableHTML()
+    + '<div class="pagebreak"></div>'
+    + '<div class="pd-secttl">各棟 房別明細（各棟 中央＝通路の複列／左①〜⑫・右⑬〜㉔　大＝頭数／小＝体重kg）</div>'
+    + '<div class="pd-rooms">'+BARNS.map(pdBarn).join('')+'</div>';
+}
+function feedTableHTML(){
+  const tot=feedTotals();
+  let rows='';
+  TANKS.forEach(t=>{
+    const cells=BRANDS.map(br=>{ const v=feed[t.no][br]; return '<td>'+(v!==''&&v!=null?v:'')+'</td>'; }).join('');
+    const barnCell = t.first ? '<td class="room" rowspan="4" style="vertical-align:middle">'+t.barns+'</td>' : '';
+    rows+='<tr'+(t.first?' class="grp"':'')+'>'+barnCell+'<td class="room">'+t.no+'</td>'+cells+'</tr>';
+  });
+  const totRow='<tr class="total"><td class="room" colspan="2">銘柄別 合計（t）</td>'
+    +BRANDS.map(br=>'<td class="big">'+fmt(tot[br])+'</td>').join('')+'</tr>';
+  return '<table class="pd-table pd-feed2"><colgroup><col style="width:20%"><col style="width:13%"><col style="width:22.3%"><col style="width:22.3%"><col style="width:22.4%"></colgroup>'
+    +'<thead><tr><th>棟番号</th><th>タンク№</th><th>たから20</th><th>たから40</th><th>たから70</th></tr></thead>'
+    +'<tbody>'+rows+'</tbody><tfoot>'+totRow+'</tfoot></table>';
+}
+
+
+
+let saveTimer=null;
+function autoSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveData(true),1200); }
+function snapshot(){ return { meta:{year:val('year'),month:val('month'),day:val('day'),staff:val('staff')}, data:data, manual:manual, feed:feed }; }
+function val(id){ return document.getElementById(id).value; }
+function saveData(auto){
+  try{ localStorage.setItem(STORE, JSON.stringify(snapshot())); status(auto?'自動保存しました':'保存しました'); }
+  catch(e){ status('保存に失敗しました'); }
+}
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORE); if(!raw) return;
+    const s=JSON.parse(raw);
+    if(s.meta){ setVal('year',s.meta.year); setVal('month',s.meta.month); setVal('day',s.meta.day); setVal('staff',s.meta.staff); }
+    if(s.data){
+      BARNS.forEach(b=>{ penList(b).forEach(p=>{
+        const src=s.data[b.id]&&s.data[b.id][p];
+        if(src){
+          data[b.id][p].count=src.count||''; data[b.id][p].weight=src.weight||'';
+          if(refs[b.id][p].c) refs[b.id][p].c.value=data[b.id][p].count;
+          if(refs[b.id][p].w) refs[b.id][p].w.value=data[b.id][p].weight;
+        }
+      });});
+    }
+    if(s.manual){
+      BARNS.forEach(b=>{
+        if(s.manual[b.id]!=null){ manual[b.id]=s.manual[b.id]; var mi=document.getElementById('man-'+b.id); if(mi) mi.value=s.manual[b.id]; }
+      });
+    }
+    if(s.feed){
+      TANKS.forEach(t=>{ if(s.feed[t.no]){ BRANDS.forEach((br,bi)=>{
+        if(s.feed[t.no][br]!=null){ feed[t.no][br]=s.feed[t.no][br]; var fi=document.getElementById('feed-'+t.no+'-'+bi); if(fi) fi.value=s.feed[t.no][br]; }
+      }); } });
+    }
+    status('前回のデータを読み込みました');
+  }catch(e){}
+}
+function setVal(id,v){ if(v!=null) document.getElementById(id).value=v; }
+function status(t){ const s=document.getElementById('saveStatus'); if(s){ s.textContent=t; } }
+
+function exportCSV(){
+  let csv='棟,房,頭数,体重kg\n';
+  BARNS.forEach(b=>{ penList(b).forEach(p=>{
+    const d=data[b.id][p]; csv+=b.id+','+p+','+(d.count||'')+','+(d.weight||'')+'\n';
+  });});
+  const bb=computeBands(); const bo=[30,40,50,60,70,80,90,100,110];
+  const tot=bo.reduce((a,k)=>a+bb[k],0)+bb.x;
+  csv+='\n体重区分別 頭数(全棟合計)\n';
+  csv+='区分,'+bo.map(k=>k+'kg').join(',')+',未分類,計\n';
+  csv+='頭数,'+bo.map(k=>bb[k]).join(',')+','+bb.x+','+tot+'\n';
+  csv+='第3農場 総頭数,'+grandHead()+'\n';
+  csv+='\n飼料の棚卸(タンク別 t)\n棟番号,タンク№,'+BRANDS.join(',')+'\n';
+  TANKS.forEach(t=>{ csv+=t.barns+','+t.no+','+BRANDS.map(br=>feed[t.no][br]||'').join(',')+'\n'; });
+  const ft=feedTotals();
+  csv+='銘柄別合計,,'+BRANDS.map(br=>fmt(ft[br])).join(',')+'\n';
+  dl(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}), '古井第3農場肉豚棚卸_'+(val('year')||'')+(val('month')||'')+(val('day')||'')+'.csv');
+}
+function doBackup(){ dl(new Blob([JSON.stringify(snapshot(),null,2)],{type:'application/json'}), '古井第3農場肉豚_バックアップ.json'); }
+function clearAll(){
+  if(!confirm('入力したすべてのデータ（頭数・体重・日付・記録者）を消去します。よろしいですか？')) return;
+  BARNS.forEach(b=>penList(b).forEach(p=>{
+    data[b.id][p].count=''; data[b.id][p].weight='';
+    if(refs[b.id][p].c) refs[b.id][p].c.value='';
+    if(refs[b.id][p].w) refs[b.id][p].w.value='';
+  }));
+  BARNS.forEach(b=>{ manual[b.id]=''; var mi=document.getElementById('man-'+b.id); if(mi) mi.value=''; });
+  TANKS.forEach(t=>{ BRANDS.forEach((br,bi)=>{ feed[t.no][br]=''; var fi=document.getElementById('feed-'+t.no+'-'+bi); if(fi) fi.value=''; }); });
+  ['year','month','day','staff'].forEach(id=>{ var e=document.getElementById(id); if(e) e.value=''; });
+  BARNS.forEach(b=>{ var bi=document.getElementById('bulk-'+b.id); if(bi) bi.value=''; });
+  localStorage.removeItem(STORE);
+  updateTotals();
+  status('データをクリアしました');
+}
+function doRestore(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ const s=JSON.parse(r.result); localStorage.setItem(STORE, JSON.stringify(s)); location.reload(); }catch(e){ alert('復元に失敗しました'); } };
+  r.readAsText(f); ev.target.value='';
+}
+function dl(blob,name){ const u=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=u; a.download=name; a.click(); URL.revokeObjectURL(u); }
+
+buildUI();
+loadData();
+switchTab('201');
+updateTotals();
+</script>
+</body>
+</html>
