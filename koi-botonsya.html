@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古井農場 母豚舎（交配部門）棚卸表</title>
+<style>
+:root{--ink:#23241f;--paper:#f3f1e9;--panel:#fff;--line:#d3cfc1;--accent:#2f6b46;--accent-soft:#e3efe6;--aisle:#ece9dd;--warn:#b23b2e;--blue:#3a6ea5;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;background:var(--paper);color:var(--ink);font-size:15px}
+.app{max-width:1100px;margin:0 auto;padding:12px}
+h1{font-size:18px;color:var(--accent);margin:4px 0 8px}
+.meta-row{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px}
+.meta-row input{border:1px solid var(--line);border-radius:6px;padding:5px 6px;font-size:14px}
+.meta-row label{color:#6b6a5f}
+.tab-bar{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:6px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.tab-btn{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:7px 14px;font-size:14px;cursor:pointer;white-space:nowrap}
+.tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
+.tab-btn.sum.active{background:var(--warn);border-color:var(--warn)}
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+.card h2{font-size:16px;color:var(--accent);margin-bottom:8px}
+.hint{font-size:12px;color:#8a897d;margin-bottom:8px}
+.bulk{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border-radius:8px;padding:7px 10px;margin-bottom:10px;flex-wrap:wrap;font-size:13px}
+.bulk select,.bulk input{border:1px solid var(--line);border-radius:6px;padding:5px 7px;font-size:14px}
+.bulk button{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 11px;font-size:13px;font-weight:700;cursor:pointer}
+/* 育成舎 pen grid */
+.pen-rows{display:flex;flex-direction:column;gap:10px}
+.pen-row{display:flex;flex-wrap:wrap;gap:6px}
+.pen{border:1px solid var(--line);border-radius:8px;padding:5px 6px;background:#fcfbf7;width:74px;text-align:center}
+.pen .no{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:2px}
+.pen input{width:100%;border:1px solid var(--line);border-radius:5px;padding:4px;font-size:14px;text-align:center;margin-bottom:3px}
+.pen select{width:100%;border:1px solid var(--line);border-radius:5px;padding:3px;font-size:12px;background:#fff}
+/* category tables */
+table.g{width:100%;border-collapse:collapse;background:var(--panel);font-size:14px}
+table.g th,table.g td{border:1px solid var(--line);padding:5px 6px;text-align:center}
+table.g th{background:var(--accent-soft);color:var(--accent);font-size:13px}
+table.g td.lbl{background:#faf9f4;font-weight:700;text-align:left;white-space:nowrap}
+table.g input{width:60px;border:1px solid var(--line);border-radius:5px;padding:5px;font-size:14px;text-align:center}
+.scroll{overflow-x:auto}
+.sub{margin-top:10px;background:var(--accent-soft);border-radius:8px;padding:9px 12px;font-size:14px}
+.sub b{font-size:16px}
+.sub .row{display:flex;flex-wrap:wrap;gap:14px}
+/* summary */
+.sum-title{font-size:15px;font-weight:700;color:var(--accent);margin:14px 0 6px}
+table.total{width:100%;border-collapse:collapse;background:var(--panel);font-size:15px}
+table.total th,table.total td{border:1px solid var(--line);padding:7px 9px;text-align:center}
+table.total th{background:var(--accent-soft);color:var(--accent)}
+table.total td.type{text-align:left;font-weight:700;background:#faf9f4}
+table.total input{width:70px;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:15px;text-align:center}
+table.total tr.tot td{background:#1a1a1a;color:#fff;font-weight:800}
+.diff-ok{color:var(--accent);font-weight:700}
+.diff-ng{color:var(--warn);font-weight:700}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.act{border:1px solid var(--accent);background:var(--panel);color:var(--accent);border-radius:8px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer}
+.act.primary{background:var(--accent);color:#fff}
+.act.warn{color:var(--warn);border-color:var(--warn)}
+.save-status{font-size:12px;color:#8a897d;text-align:center;margin-bottom:10px;min-height:16px}
+#print-area{display:none}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff}
+  .tab-bar,.section,.btn-row,.save-status,.meta-row,h1{display:none !important}
+  #print-area{display:block !important}
+  @page{size:A4 portrait;margin:12mm 9mm 10mm 16mm}
+}
+.pd-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:8px}
+.pd-title{font-size:17px;font-weight:800}
+.pd-right{font-size:11px;font-weight:700;text-align:right}
+.pd-sec{font-size:11px;font-weight:800;margin:10px 0 3px}
+table.pd{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:4px}
+table.pd th,table.pd td{border:1px solid #000;padding:3px 6px;text-align:center}
+table.pd th{background:#e8e8e8}
+table.pd td.l{text-align:left;font-weight:700}
+table.pd td.b{font-weight:800;background:#f3f3f3}
+table.pd tr.tot td{background:#1a1a1a;color:#fff;font-weight:800}
+.pd-cols{display:flex;gap:10px}
+.pd-cols>div{flex:1}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>古井農場　母豚舎（交配部門）棚卸表</h1>
+  <div class="meta-row">
+    <input id="year" style="width:60px" inputmode="numeric" maxlength="4"><label>年</label>
+    <input id="month" style="width:42px" inputmode="numeric" maxlength="2"><label>月</label>
+    <input id="day" style="width:42px" inputmode="numeric" maxlength="2"><label>日</label>
+    <label style="margin-left:8px">記録者</label><input id="rec" style="width:120px" placeholder="氏名">
+  </div>
+
+  <div class="tab-bar" id="tabBar"></div>
+  <div id="sections"></div>
+
+  <div class="btn-row">
+    <button class="act" onclick="saveData(false)">データを保存</button>
+    <button class="act primary" onclick="window.print()">印刷 / PDF</button>
+    <button class="act" onclick="exportCSV()">CSVで書き出す</button>
+    <button class="act" onclick="doBackup()">バックアップ保存</button>
+    <button class="act" onclick="document.getElementById('rf').click()">バックアップ読込</button>
+    <input type="file" id="rf" accept="application/json" style="display:none" onchange="doRestore(event)">
+    <button class="act warn" onclick="clearAll()">データをクリア</button>
+  </div>
+  <div class="save-status" id="ss"></div>
+  <div id="print-area"></div>
+</div>
+
+<script>
+const STORE='furui_botasha_v1';
+// 育成舎 房番号（配置順）：1〜13 / 26〜14 / 27〜39
+const IKU_ROWS=[[],[],[]];
+for(let i=0;i<13;i++){ IKU_ROWS[0].push(i+1); IKU_ROWS[1].push(26-i); IKU_ROWS[2].push(27+i); }
+const IKU_PENS=[].concat(IKU_ROWS[0],IKU_ROWS[1],IKU_ROWS[2]); // 1..13,26..14,27..39
+const IKU_TYPES=[['PS','育成PS'],['GP','育成GP'],['M','育成♂']];
+const KOHAI_COLS=[['mise','見せオス'],['iPS','育成PS'],['iGP','育成GP'],['bPS','母豚PS'],['bGP','母豚GP']];
+const NIN_COLS=[['bPS','母豚PS'],['bGP','母豚GP']];
+// 最終 種類一覧
+const TYPES=[['ikuPS','育成PS'],['ikuGP','育成GP'],['ikuM','育成♂'],['mise','見せオス'],['aiPS','PSオス'],['aiGP','GPオス'],['aiHD','HDオス'],['boPS','母豚PS'],['boGP','母豚GP']];
+// 飼料（母豚舎部門）：タンク11-12=シンサウメイク(育成舎)、21-30=たから母豚(母豚舎)、紙袋=やまとX
+const FEED_TANKS=[
+  {no:11,barn:'育成舎',feed:'シンサウメイク'},{no:12,barn:'育成舎',feed:'シンサウメイク'},
+  {no:21,barn:'母豚舎',feed:'たから母豚'},{no:22,barn:'母豚舎',feed:'たから母豚'},{no:23,barn:'母豚舎',feed:'たから母豚'},
+  {no:24,barn:'母豚舎',feed:'たから母豚'},{no:25,barn:'母豚舎',feed:'たから母豚'},{no:26,barn:'母豚舎',feed:'たから母豚'},
+  {no:27,barn:'母豚舎',feed:'たから母豚'},{no:28,barn:'母豚舎',feed:'たから母豚'},{no:29,barn:'母豚舎',feed:'たから母豚'},
+  {no:30,barn:'母豚舎',feed:'たから母豚'}
+];
+const FEED_BAGS=[{name:'やまとX',unit:'袋'}];
+const FEED_TBRANDS=['シンサウメイク','たから母豚'];
+
+function freshState(){
+  var s={meta:{year:'',month:'',day:'',rec:''},
+    iku:{}, kohai:[], ninton:[], mise:'', ai:{PS:'',GP:'',HD:''}, book:{}};
+  IKU_PENS.forEach(function(p){ s.iku[p]={h:'',t:'PS'}; });
+  for(var i=0;i<10;i++){ s.kohai.push({mise:'',iPS:'',iGP:'',bPS:'',bGP:''}); s.ninton.push({bPS:'',bGP:''}); }
+  TYPES.forEach(function(t){ s.book[t[0]]=''; });
+  s.feedTank={}; FEED_TANKS.forEach(function(t){ s.feedTank[t.no]=''; });
+  s.feedBag={}; FEED_BAGS.forEach(function(b){ s.feedBag[b.name]=''; });
+  return s;
+}
+function feedTotals(){
+  var g={}; FEED_TBRANDS.forEach(function(b){g[b]=0;});
+  FEED_TANKS.forEach(function(t){ g[t.feed]+=parseFloat(state.feedTank[t.no])||0; });
+  var bags={}; FEED_BAGS.forEach(function(b){ bags[b.name]=parseFloat(state.feedBag[b.name])||0; });
+  return {t:g,bags:bags};
+}
+function fmtf(n){return (Math.round(n*100)/100).toString();}
+var state=load()||freshState();
+normalize();
+function normalize(){
+  if(!state.iku) state.iku={}; IKU_PENS.forEach(function(p){ if(!state.iku[p]) state.iku[p]={h:'',t:'PS'}; });
+  if(!state.kohai||state.kohai.length<10){ state.kohai=state.kohai||[]; while(state.kohai.length<10) state.kohai.push({mise:'',iPS:'',iGP:'',bPS:'',bGP:''}); }
+  if(!state.ninton||state.ninton.length<10){ state.ninton=state.ninton||[]; while(state.ninton.length<10) state.ninton.push({bPS:'',bGP:''}); }
+  if(!state.ai) state.ai={PS:'',GP:'',HD:''};
+  if(state.mise==null) state.mise='';
+  if(!state.book) state.book={}; TYPES.forEach(function(t){ if(state.book[t[0]]==null) state.book[t[0]]=''; });
+  if(!state.feedTank) state.feedTank={}; FEED_TANKS.forEach(function(t){ if(state.feedTank[t.no]==null) state.feedTank[t.no]=''; });
+  if(!state.feedBag) state.feedBag={}; FEED_BAGS.forEach(function(b){ if(state.feedBag[b.name]==null) state.feedBag[b.name]=''; });
+}
+function load(){try{var s=localStorage.getItem(STORE);return s?JSON.parse(s):null;}catch(e){return null;}}
+function num(v){var n=parseInt(v);return isNaN(n)?0:n;}
+
+/* ===== 集計計算 ===== */
+function ikuSub(){var o={PS:0,GP:0,M:0};IKU_PENS.forEach(function(p){var c=state.iku[p];o[c.t]+=num(c.h);});return o;}
+function kohaiSub(){var o={mise:0,iPS:0,iGP:0,bPS:0,bGP:0};state.kohai.forEach(function(u){o.mise+=num(u.mise);o.iPS+=num(u.iPS);o.iGP+=num(u.iGP);o.bPS+=num(u.bPS);o.bGP+=num(u.bGP);});return o;}
+function nintonSub(){var o={bPS:0,bGP:0};state.ninton.forEach(function(u){o.bPS+=num(u.bPS);o.bGP+=num(u.bGP);});return o;}
+function botaSub(){ // 母豚舎内（交配+妊豚+別枠見せオス）
+  var k=kohaiSub(),n=nintonSub();
+  return {mise:k.mise+num(state.mise), iPS:k.iPS, iGP:k.iGP, boPS:k.bPS+n.bPS, boGP:k.bGP+n.bGP};
+}
+function aiSub(){return {PS:num(state.ai.PS),GP:num(state.ai.GP),HD:num(state.ai.HD)};}
+function grandByType(){
+  var ik=ikuSub(),bo=botaSub(),ai=aiSub();
+  return {
+    ikuPS: ik.PS + bo.iPS,
+    ikuGP: ik.GP + bo.iGP,
+    ikuM:  ik.M,
+    mise:  bo.mise,
+    aiPS:  ai.PS,
+    aiGP:  ai.GP,
+    aiHD:  ai.HD,
+    boPS:  bo.boPS,
+    boGP:  bo.boGP
+  };
+}
+function grandTotal(g){var s=0;TYPES.forEach(function(t){s+=g[t[0]];});return s;}
+
+/* ===== UI ===== */
+var SECS=[['iku','育成舎'],['bota','母豚舎'],['ai','AIセンター'],['feed','飼料'],['sum','集計・印刷']];
+function buildTabs(){
+  document.getElementById('tabBar').innerHTML=SECS.map(function(s,i){
+    return '<button class="tab-btn'+(s[0]==='sum'?' sum':'')+(i===0?' active':'')+'" data-tab="'+s[0]+'" onclick="switchTab(\''+s[0]+'\')">'+s[1]+'</button>';
+  }).join('');
+}
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===id);});
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('active');});
+  var el=document.getElementById('sec-'+id); if(el) el.classList.add('active');
+  if(id==='sum') renderSum();
+  window.scrollTo(0,0);
+}
+function buildSections(){
+  var h='';
+  h+='<div class="section active" id="sec-iku">'+ikuHTML()+'</div>';
+  h+='<div class="section" id="sec-bota">'+botaHTML()+'</div>';
+  h+='<div class="section" id="sec-ai">'+aiHTML()+'</div>';
+  h+='<div class="section" id="sec-feed">'+feedHTML()+'</div>';
+  h+='<div class="section" id="sec-sum"></div>';
+  document.getElementById('sections').innerHTML=h;
+  wireIku(); wireBota(); wireAi(); wireFeed();
+}
+/* 育成舎 */
+function ikuHTML(){
+  var opts=IKU_TYPES.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>';}).join('');
+  function penCell(p){
+    return '<div class="pen"><div class="no">'+p+'</div>'+
+      '<input type="number" inputmode="numeric" min="0" data-iku-h="'+p+'" placeholder="頭">'+
+      '<select data-iku-t="'+p+'">'+opts+'</select></div>';
+  }
+  var rows=IKU_ROWS.map(function(row){return '<div class="pen-row">'+row.map(penCell).join('')+'</div>';}).join('');
+  return '<div class="card"><h2>育成舎（39房）</h2>'+
+    '<div class="hint">配置：上段 1〜13／中段 26〜14／下段 27〜39。各房に頭数を入力し、区分（育成PS／育成GP／育成♂）を選択。</div>'+
+    '<div class="bulk"><label>区分を一括：</label><select id="ikuBulkT"><option value="PS">育成PS</option><option value="GP">育成GP</option><option value="M">育成♂</option></select><button onclick="ikuBulk()">全房に適用</button></div>'+
+    '<div class="pen-rows">'+rows+'</div>'+
+    '<div class="sub"><div class="row"><span>育成舎内集計 →</span><span>育成PS <b id="is-PS">0</b></span><span>育成GP <b id="is-GP">0</b></span><span>育成♂ <b id="is-M">0</b></span><span>計 <b id="is-T">0</b></span></div></div></div>';
+}
+function wireIku(){
+  document.querySelectorAll('[data-iku-h]').forEach(function(el){el.value=state.iku[el.dataset.ikuH].h;el.addEventListener('input',function(){state.iku[el.dataset.ikuH].h=el.value;updateIkuSub();autoSave();});});
+  document.querySelectorAll('[data-iku-t]').forEach(function(el){el.value=state.iku[el.dataset.ikuT].t;el.addEventListener('change',function(){state.iku[el.dataset.ikuT].t=el.value;updateIkuSub();autoSave();});});
+  updateIkuSub();
+}
+function ikuBulk(){var v=document.getElementById('ikuBulkT').value;IKU_PENS.forEach(function(p){state.iku[p].t=v;});document.querySelectorAll('[data-iku-t]').forEach(function(el){el.value=v;});updateIkuSub();autoSave();}
+function updateIkuSub(){var o=ikuSub();set('is-PS',o.PS);set('is-GP',o.GP);set('is-M',o.M);set('is-T',o.PS+o.GP+o.M);}
+/* 母豚舎 */
+function botaHTML(){
+  var kh='<div class="scroll"><table class="g"><thead><tr><th>交配<br>スペース</th>'+KOHAI_COLS.map(function(c){return '<th>'+c[1]+'</th>';}).join('')+'</tr></thead><tbody>';
+  for(var i=0;i<10;i++){ kh+='<tr><td class="lbl">'+circ(i+1)+'</td>'+KOHAI_COLS.map(function(c){return '<td><input type="number" inputmode="numeric" min="0" data-koh="'+i+'" data-k="'+c[0]+'"></td>';}).join('')+'</tr>'; }
+  kh+='</tbody></table></div>';
+  var nh='<div class="scroll"><table class="g"><thead><tr><th>妊豚<br>スペース</th>'+NIN_COLS.map(function(c){return '<th>'+c[1]+'</th>';}).join('')+'</tr></thead><tbody>';
+  for(var j=0;j<10;j++){ nh+='<tr><td class="lbl">'+circ(j+1)+'</td>'+NIN_COLS.map(function(c){return '<td><input type="number" inputmode="numeric" min="0" data-nin="'+j+'" data-k="'+c[0]+'"></td>';}).join('')+'</tr>'; }
+  nh+='</tbody></table></div>';
+  return '<div class="card"><h2>交配スペース（①〜⑩）</h2><div class="hint">各ユニットに見せオス／育成PS／育成GP／母豚PS／母豚GPの頭数を入力。</div>'+kh+'</div>'+
+    '<div class="card"><h2>妊豚スペース（①〜⑩）</h2><div class="hint">各ユニットに母豚PS／母豚GPの頭数を入力。</div>'+nh+'</div>'+
+    '<div class="card"><h2>見せオス（別枠）</h2><div class="bulk"><label>見せオス</label><input type="number" inputmode="numeric" min="0" id="miseInp" style="width:80px"><span class="hint" style="margin:0">頭</span></div>'+
+    '<div class="sub"><div class="row"><span>母豚舎内集計 →</span><span>見せオス <b id="bs-mise">0</b></span><span>育成PS <b id="bs-iPS">0</b></span><span>育成GP <b id="bs-iGP">0</b></span><span>母豚PS <b id="bs-boPS">0</b></span><span>母豚GP <b id="bs-boGP">0</b></span></div></div></div>';
+}
+function wireBota(){
+  document.querySelectorAll('[data-koh]').forEach(function(el){el.value=state.kohai[+el.dataset.koh][el.dataset.k];el.addEventListener('input',function(){state.kohai[+el.dataset.koh][el.dataset.k]=el.value;updateBotaSub();autoSave();});});
+  document.querySelectorAll('[data-nin]').forEach(function(el){el.value=state.ninton[+el.dataset.nin][el.dataset.k];el.addEventListener('input',function(){state.ninton[+el.dataset.nin][el.dataset.k]=el.value;updateBotaSub();autoSave();});});
+  var m=document.getElementById('miseInp');m.value=state.mise;m.addEventListener('input',function(){state.mise=m.value;updateBotaSub();autoSave();});
+  updateBotaSub();
+}
+function updateBotaSub(){var o=botaSub();set('bs-mise',o.mise);set('bs-iPS',o.iPS);set('bs-iGP',o.iGP);set('bs-boPS',o.boPS);set('bs-boGP',o.boGP);}
+/* AIセンター */
+function aiHTML(){
+  return '<div class="card"><h2>AIセンター</h2><div class="hint">PSオス／GPオス／HDオスの頭数を入力。</div>'+
+    '<div class="scroll"><table class="g"><thead><tr><th>PSオス</th><th>GPオス</th><th>HDオス</th></tr></thead><tbody><tr>'+
+    '<td><input type="number" inputmode="numeric" min="0" data-ai="PS"></td>'+
+    '<td><input type="number" inputmode="numeric" min="0" data-ai="GP"></td>'+
+    '<td><input type="number" inputmode="numeric" min="0" data-ai="HD"></td></tr></tbody></table></div>'+
+    '<div class="sub"><div class="row"><span>AIセンター内集計 →</span><span>PSオス <b id="as-PS">0</b></span><span>GPオス <b id="as-GP">0</b></span><span>HDオス <b id="as-HD">0</b></span></div></div></div>';
+}
+function wireAi(){
+  document.querySelectorAll('[data-ai]').forEach(function(el){el.value=state.ai[el.dataset.ai];el.addEventListener('input',function(){state.ai[el.dataset.ai]=el.value;updateAiSub();autoSave();});});
+  updateAiSub();
+}
+function updateAiSub(){var o=aiSub();set('as-PS',o.PS);set('as-GP',o.GP);set('as-HD',o.HD);}
+/* 飼料 */
+function feedHTML(){
+  var rows=FEED_TANKS.map(function(t,i){
+    var showBarn=(i===0)||(FEED_TANKS[i-1].barn!==t.barn);
+    var span=FEED_TANKS.filter(function(x){return x.barn===t.barn;}).length;
+    var barnCell=showBarn?'<td class="lbl" rowspan="'+span+'" style="vertical-align:middle">'+t.barn+'</td>':'';
+    var showFeed=(i===0)||(FEED_TANKS[i-1].feed!==t.feed);
+    var fspan=FEED_TANKS.filter(function(x){return x.feed===t.feed;}).length;
+    var feedCell=showFeed?'<td rowspan="'+fspan+'" style="vertical-align:middle">'+t.feed+'</td>':'';
+    return '<tr><td class="lbl">'+t.no+'</td>'+barnCell+feedCell+'<td><input type="number" inputmode="decimal" min="0" step="0.1" data-ft="'+t.no+'" style="width:70px"></td><td>t</td></tr>';
+  }).join('');
+  var bagRows=FEED_BAGS.map(function(b){return '<tr><td class="lbl">紙袋</td><td colspan="2">'+b.name+'</td><td><input type="number" inputmode="decimal" min="0" data-fb="'+b.name+'" style="width:70px"></td><td>'+b.unit+'</td></tr>';}).join('');
+  return '<div class="card"><h2>飼料の棚卸（母豚舎部門）</h2>'+
+    '<div class="hint">タンク11〜12＝シンサウメイク（育成舎）、21〜30＝たから母豚（母豚舎）、紙袋やまとX。残数量を入力すると銘柄別合計を集計します。</div>'+
+    '<div class="scroll"><table class="g"><thead><tr><th>タンクNo.</th><th>豚舎</th><th>飼料名</th><th>残数量</th><th>単位</th></tr></thead><tbody>'+rows+bagRows+'</tbody></table></div>'+
+    '<div class="sum-title">銘柄別 合計</div>'+
+    '<div class="scroll"><table class="g" id="feedTotTable"><thead><tr><th>銘柄</th><th>合計</th><th>単位</th></tr></thead><tbody id="feedTotBody"></tbody></table></div></div>';
+}
+function wireFeed(){
+  document.querySelectorAll('[data-ft]').forEach(function(el){el.value=state.feedTank[el.dataset.ft]||'';el.addEventListener('input',function(){state.feedTank[el.dataset.ft]=el.value;updateFeedSub();autoSave();});});
+  document.querySelectorAll('[data-fb]').forEach(function(el){el.value=state.feedBag[el.dataset.fb]||'';el.addEventListener('input',function(){state.feedBag[el.dataset.fb]=el.value;updateFeedSub();autoSave();});});
+  updateFeedSub();
+}
+function updateFeedSub(){
+  var ft=feedTotals(),h='';
+  FEED_TBRANDS.forEach(function(b){h+='<tr><td class="lbl">'+b+'</td><td><b>'+fmtf(ft.t[b])+'</b></td><td>t</td></tr>';});
+  FEED_BAGS.forEach(function(b){h+='<tr><td class="lbl">'+b.name+'</td><td><b>'+fmtf(ft.bags[b.name])+'</b></td><td>'+b.unit+'</td></tr>';});
+  var el=document.getElementById('feedTotBody'); if(el) el.innerHTML=h;
+}
+/* 集計・印刷 */
+function renderSum(){
+  var g=grandByType();
+  var rows=TYPES.map(function(t){
+    var key=t[0], calc=g[key], book=state.book[key];
+    return '<tr><td class="type">'+t[1]+'</td><td>'+calc+'</td>'+
+      '<td><input type="number" inputmode="numeric" min="0" data-book="'+key+'" value="'+(book||'')+'"></td>'+
+      '<td id="df-'+key+'">'+diffHTML(calc,book)+'</td></tr>';
+  }).join('');
+  var gt=grandTotal(g);
+  rows+='<tr class="tot"><td class="type">合計</td><td>'+gt+'</td><td></td><td></td></tr>';
+  var el=document.getElementById('sec-sum');
+  el.innerHTML='<div class="card"><h2>種類別 総集計（集計＝各豚舎の合算／棚卸＝手入力／差）</h2>'+
+    '<div class="hint">「棚卸」に管理上の実数を入力すると差（棚卸−集計）を表示します。手入力はこの表だけです。</div>'+
+    '<div class="scroll"><table class="total"><thead><tr><th>種類</th><th>集計</th><th>棚卸（手入力）</th><th>差</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+    '<div class="card"><h2>各豚舎内 集計</h2>'+areaSubHTML()+'</div>';
+  el.querySelectorAll('[data-book]').forEach(function(inp){
+    inp.addEventListener('input',function(){state.book[inp.dataset.book]=inp.value;var g2=grandByType();document.getElementById('df-'+inp.dataset.book).innerHTML=diffHTML(g2[inp.dataset.book],inp.value);autoSave();});
+  });
+  buildPrint();
+}
+function areaSubHTML(){
+  var ik=ikuSub(),bo=botaSub(),ai=aiSub();
+  function t(title,pairs){return '<table class="g" style="margin-bottom:10px"><thead><tr><th colspan="'+pairs.length+'">'+title+'</th></tr><tr>'+pairs.map(function(p){return '<th>'+p[0]+'</th>';}).join('')+'</tr></thead><tbody><tr>'+pairs.map(function(p){return '<td><b>'+p[1]+'</b></td>';}).join('')+'</tr></tbody></table>';}
+  return t('育成舎',[['育成PS',ik.PS],['育成GP',ik.GP],['育成♂',ik.M]])+
+    t('母豚舎',[['見せオス',bo.mise],['育成PS',bo.iPS],['育成GP',bo.iGP],['母豚PS',bo.boPS],['母豚GP',bo.boGP]])+
+    t('AIセンター',[['PSオス',ai.PS],['GPオス',ai.GP],['HDオス',ai.HD]]);
+}
+function diffHTML(calc,book){
+  if(book===''||book==null) return '<span style="color:#8a897d">—</span>';
+  var d=Number(book)-calc; if(isNaN(d)) return '<span style="color:#8a897d">—</span>';
+  if(d===0) return '<span class="diff-ok">一致</span>';
+  return '<span class="diff-ng">'+(d>0?'+'+d:d)+'</span>';
+}
+
+/* ===== 印刷 ===== */
+function buildPrint(){
+  var g=grandByType(),gt=grandTotal(g);
+  var ik=ikuSub(),bo=botaSub(),ai=aiSub();
+  var m=state.meta;
+  var body=TYPES.map(function(t){var calc=g[t[0]],book=state.book[t[0]];var dt=(book===''||book==null)?'―':(Number(book)-calc===0?'一致':((Number(book)-calc)>0?'+'+(Number(book)-calc):''+(Number(book)-calc)));return '<tr><td class="l">'+t[1]+'</td><td class="b">'+calc+'</td><td>'+((book===''||book==null)?'':book)+'</td><td>'+((book===''||book==null)?'':dt)+'</td></tr>';}).join('');
+  body+='<tr class="tot"><td class="l">合計</td><td>'+gt+'</td><td></td><td></td></tr>';
+  function area(title,pairs){return '<table class="pd"><thead><tr><th colspan="2">'+title+'</th></tr></thead><tbody>'+pairs.map(function(p){return '<tr><td class="l">'+p[0]+'</td><td class="b">'+p[1]+'</td></tr>';}).join('')+'</tbody></table>';}
+  document.getElementById('print-area').innerHTML=
+    '<div class="pd-head"><div class="pd-title">古井農場　母豚舎（交配部門）棚卸表</div>'+
+      '<div class="pd-right">記入日：'+(m.year||'　　')+' 年 '+(m.month||'　')+' 月 '+(m.day||'　')+' 日　／　記録者：'+(m.rec||'　　　　')+'</div></div>'+
+    '<div class="pd-sec">種類別 総集計（集計／棚卸／差）</div>'+
+    '<table class="pd"><thead><tr><th>種類</th><th>集計</th><th>棚卸</th><th>差</th></tr></thead><tbody>'+body+'</tbody></table>'+
+    '<div class="pd-sec">各豚舎内 集計</div>'+
+    '<div class="pd-cols"><div>'+area('育成舎',[['育成PS',ik.PS],['育成GP',ik.GP],['育成♂',ik.M]])+area('AIセンター',[['PSオス',ai.PS],['GPオス',ai.GP],['HDオス',ai.HD]])+'</div>'+
+    '<div>'+area('母豚舎',[['見せオス',bo.mise],['育成PS',bo.iPS],['育成GP',bo.iGP],['母豚PS',bo.boPS],['母豚GP',bo.boGP]])+'</div></div>'+
+    feedPrintHTML();
+}
+function feedPrintHTML(){
+  var ft=feedTotals();
+  var rows=FEED_TANKS.map(function(t){return '<tr><td>'+t.no+'</td><td class="l">'+t.barn+'</td><td class="l">'+t.feed+'</td><td>'+(state.feedTank[t.no]||'')+'</td><td>t</td></tr>';}).join('');
+  var bags=FEED_BAGS.map(function(b){return '<tr><td>紙袋</td><td class="l" colspan="2">'+b.name+'</td><td>'+(state.feedBag[b.name]||'')+'</td><td>'+b.unit+'</td></tr>';}).join('');
+  var tot=FEED_TBRANDS.map(function(b){return '<tr class="tot"><td class="l" colspan="3">'+b+' 合計</td><td class="b">'+fmtf(ft.t[b])+'</td><td>t</td></tr>';}).join('')+
+    FEED_BAGS.map(function(b){return '<tr class="tot"><td class="l" colspan="3">'+b.name+' 合計</td><td class="b">'+fmtf(ft.bags[b.name])+'</td><td>'+b.unit+'</td></tr>';}).join('');
+  return '<div class="pd-sec">飼料の棚卸（母豚舎部門）</div>'+
+    '<table class="pd"><thead><tr><th>タンクNo.</th><th>豚舎</th><th>飼料名</th><th>残数量</th><th>単位</th></tr></thead><tbody>'+rows+bags+tot+'</tbody></table>';
+}
+
+/* ===== utils / save ===== */
+function circ(n){return (n>=1&&n<=20)?String.fromCharCode(0x2460+n-1):('('+n+')');}
+function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+function val(id){return document.getElementById(id).value;}
+function syncMeta(){state.meta={year:val('year'),month:val('month'),day:val('day'),rec:val('rec')};}
+var timer=null;
+function autoSave(){clearTimeout(timer);timer=setTimeout(function(){saveData(true);},1000);}
+function saveData(auto){syncMeta();try{localStorage.setItem(STORE,JSON.stringify(state));st(auto?'自動保存しました':'保存しました');}catch(e){st('保存に失敗しました');}}
+function st(t){var e=document.getElementById('ss');if(e)e.textContent=t;}
+function fillMeta(){document.getElementById('year').value=state.meta.year||'';document.getElementById('month').value=state.meta.month||'';document.getElementById('day').value=state.meta.day||'';document.getElementById('rec').value=state.meta.rec||'';}
+['year','month','day','rec'].forEach(function(id){});
+function exportCSV(){
+  var g=grandByType();var rows=[];
+  rows.push(['古井農場 母豚舎（交配部門）棚卸表']);
+  rows.push(['記入日',(state.meta.year||'')+'/'+(state.meta.month||'')+'/'+(state.meta.day||''),'記録者',state.meta.rec||'']);
+  rows.push([]);rows.push(['種類','集計','棚卸','差']);
+  TYPES.forEach(function(t){var c=g[t[0]],b=state.book[t[0]];var d=(b===''||b==null)?'':(Number(b)-c);rows.push([t[1],c,b,d]);});
+  rows.push(['合計',grandTotal(g),'','']);
+  rows.push([]);rows.push(['育成舎 房別']);rows.push(['房番号','頭数','区分']);
+  IKU_PENS.forEach(function(p){var c=state.iku[p];rows.push([p,c.h,({PS:'育成PS',GP:'育成GP',M:'育成♂'})[c.t]]);});
+  var ft=feedTotals();
+  rows.push([]);rows.push(['飼料の棚卸（母豚舎部門）']);rows.push(['タンクNo.','豚舎','飼料名','残数量','単位']);
+  FEED_TANKS.forEach(function(t){rows.push([t.no,t.barn,t.feed,state.feedTank[t.no],'t']);});
+  FEED_BAGS.forEach(function(b){rows.push(['紙袋',b.name,'',state.feedBag[b.name],b.unit]);});
+  rows.push(['銘柄別合計','','','','']);
+  FEED_TBRANDS.forEach(function(b){rows.push([b,fmtf(ft.t[b]),'t']);});
+  FEED_BAGS.forEach(function(b){rows.push([b.name,fmtf(ft.bags[b.name]),b.unit]);});
+  var csv='\ufeff'+rows.map(function(r){return r.map(function(x){x=(x==null?'':String(x));return /[",\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x;}).join(',');}).join('\r\n');
+  dl(new Blob([csv],{type:'text/csv'}),'母豚舎棚卸_'+(state.meta.year||'')+(state.meta.month||'')+(state.meta.day||'')+'.csv');
+}
+function doBackup(){syncMeta();dl(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),'母豚舎棚卸_バックアップ.json');}
+function doRestore(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{state=JSON.parse(r.result);normalize();localStorage.setItem(STORE,JSON.stringify(state));location.reload();}catch(e){alert('読み込めませんでした');}};r.readAsText(f);ev.target.value='';}
+function dl(blob,name){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+function clearAll(){
+  if(!confirm('入力したすべてのデータを消去します。よろしいですか？'))return;
+  state=freshState();localStorage.removeItem(STORE);fillMeta();buildSections();switchTab('iku');st('データをクリアしました');
+}
+
+buildTabs();
+buildSections();
+fillMeta();
+switchTab('iku');
+buildPrint();
+</script>
+</body>
+</html>
