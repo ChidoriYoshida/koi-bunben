@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>古井農場 子豚舎 棚卸 操作マニュアル</title>
+<title>古井農場 分娩舎 棚卸 操作マニュアル</title>
 <style>
   :root{
     --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
@@ -55,21 +55,20 @@
 <body>
 <div class="sheet">
   <header>
-    <h1>子豚舎 棚卸 操作マニュアル</h1>
-    <div class="sub">古井農場 子豚舎（1〜8号室）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
+    <h1>分娩舎 棚卸 操作マニュアル</h1>
+    <div class="sub">古井農場 分娩舎（各部屋・ミルキー室）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
   </header>
 
   <div class="links">
-    <div class="row"><span class="tag">リンク</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/kobuta.html</span></div>
+    <div class="row"><span class="tag">リンク</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/</span></div>
     <div class="note">Safari／Chrome で開きます。共有ボタン →「ホーム画面に追加」でアイコン化すると次回から便利です。</div>
   </div>
 
   <h2>1. iPad・スマホで入力する</h2>
   <div class="step"><div class="num">1</div><div class="body"><b>リンクを開き、日付・記録者を入力。</b></div></div>
-  <div class="step"><div class="num">2</div><div class="body"><b>号室タブ（1〜8号室）を選び、各房の頭数・体重を入力。</b><div class="d">中央が通路の複列（右列 手前1〜奥8／左列 奥9〜手前16）。</div></div></div>
-  <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」で確認。</b><div class="d">部屋別の照合（棚卸頭数＝実数／集計頭数＝手入力／差）、体重区分（10・20・30・40kg）。差が出たら入力を見直し。</div></div></div>
-  <div class="step"><div class="num">4</div><div class="body"><b>「飼料の棚卸」に在庫量を入力。</b><div class="d">タンク No.41〜44（たから12／たから20ペレット）と紙袋（ママコロ前期・ミュー前期）。銘柄別の合計が自動計算されます。</div></div></div>
-  <div class="step"><div class="num">5</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています。</div></div></div>
+  <div class="step"><div class="num">2</div><div class="body"><b>部屋タブ（各部屋・ミルキー室）を選び、各房を入力。</b><div class="d">母豚の在・不在、状態（分娩・授乳・離乳）と子豚の頭数を入力します（頭数はボタンで選択、他の数は「他」で手入力）。</div></div></div>
+  <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」で確認。</b><div class="d">部屋別の母豚数・子豚数の集計と照合。差が出たら入力を見直し。</div></div></div>
+  <div class="step"><div class="num">4</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています。</div></div></div>
 
   <h2 class="blue">2. 繁殖事務所へ送って印刷する（どちらか一方でOK）</h2>
   <div class="cols">
@@ -83,7 +82,7 @@
       <div class="who">▼ 事務所PC</div>
       <ol>
         <li>同じリンクを開く →「<b>バックアップ読込</b>」→ 受け取った.jsonを選ぶ。</li>
-        <li>データが入るので「<b>印刷（A4縦・提出用）</b>」→ A4縦・1枚で印刷。</li>
+        <li>データが入るので「<b>印刷（A4縦・提出用）</b>」→ A4縦で印刷。</li>
       </ol>
     </div>
     <div class="card B">
@@ -92,7 +91,7 @@
       <ol>
         <li>「<b>印刷（A4縦・提出用）</b>」をタップ。</li>
         <li>iPad/iPhone：プレビュー右上の<b>共有</b>→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
-        <li>保存した<b>PDF（1ページ）をメール添付</b>して事務所へ送信。</li>
+        <li>保存した<b>PDFをメール添付</b>して事務所へ送信。</li>
       </ol>
       <div class="who">▼ 事務所PC</div>
       <ol>
@@ -107,13 +106,13 @@
     <b>注意事項</b>
     <ul>
       <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。複数人で分担した場合は、各自の.jsonを事務所で「<b>部屋を合算して読込</b>」すると、入力済みの部屋だけが取り込まれ合算されます（同じ部屋は後勝ち）。</li>
-      <li>印刷は<b>A4縦・1枚</b>（部屋別照合・体重区分・飼料の棚卸・全8部屋の房別明細＝頭数・体重kg）。</li>
+      <li>印刷は<b>A4縦・提出用</b>（部屋別の一覧と集計）。</li>
       <li>「<b>この棚卸を消去</b>」は全消去です。次回の棚卸を白紙で始めるときだけ使ってください。</li>
       <li>「CSVで書き出し」は表計算ソフト用の記録です（印刷用は方法A/Bを使用）。</li>
     </ul>
   </div>
 
-  <footer>古井農場 子豚舎 棚卸システム</footer>
+  <footer>古井農場 分娩舎 棚卸システム</footer>
 </div>
 </body>
 </html>

@@ -3,28 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>古井農場 子豚舎 棚卸 操作マニュアル</title>
+<title>古井農場 肉豚舎 棚卸 操作マニュアル（第2・第3農場）</title>
 <style>
   :root{
     --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
-    --line:#d3cfc1; --green:#2f6b46; --green-soft:#e3efe6; --blue:#3a6ea5; --blue-soft:#e3edf6;
+    --line:#d3cfc1; --line-strong:#b4ae9c;
+    --green:#2f6b46; --green-soft:#e3efe6; --blue:#3a6ea5; --blue-soft:#e3edf6;
     --warn:#b23b2e; --warn-soft:#f6e3df; --accent:#23241f;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:11mm 12mm 9mm}
   header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--green);padding-bottom:6px;margin-bottom:10px;gap:12px}
-  h1{font-size:19px;font-weight:800;color:var(--green)}
+  h1{font-size:19px;font-weight:800;letter-spacing:.01em;color:var(--green)}
   header .sub{font-size:11px;color:var(--ink-soft);text-align:right;line-height:1.4}
   .links{background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:9px 13px;font-size:12.5px;margin-bottom:11px}
   .links .row{display:flex;gap:8px;align-items:baseline;margin:2px 0}
-  .links .tag{flex:0 0 64px;font-weight:800;color:var(--green)}
+  .links .tag{flex:0 0 74px;font-weight:800;color:var(--green)}
   .links .u{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;word-break:break-all}
   .links .note{font-size:11px;color:var(--ink-soft);margin-top:4px}
   h2{font-size:14.5px;font-weight:800;margin:12px 0 6px;padding-left:9px;border-left:5px solid var(--green)}
   h2.blue{border-left-color:var(--blue)}
   .step{display:flex;gap:9px;margin:6px 0}
   .num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .num.b{background:var(--blue)}
   .step .body{flex:1;font-size:13px}
   .step .body b{color:var(--ink)}
   .step .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
@@ -38,7 +40,7 @@
   .card .rec{display:inline-block;font-size:10.5px;font-weight:800;background:var(--green);color:#fff;border-radius:10px;padding:1px 7px;margin-left:5px;vertical-align:middle}
   .card ol{margin:0 0 0 3px;padding:0;list-style:none;counter-reset:s}
   .card ol li{position:relative;padding:3px 0 3px 22px;font-size:12.5px;counter-increment:s}
-  .card ol li::before{content:counter(s);position:absolute;left:0;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;border:1.5px solid currentColor;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .card ol li::before{content:counter(s);position:absolute;left:0;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;border:1.5px solid currentColor;color:inherit;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
   .card.A ol li::before{color:var(--green)}
   .card.B ol li::before{color:var(--blue)}
   .card .who{font-size:11px;font-weight:800;color:var(--ink-soft);margin:4px 0 1px}
@@ -55,44 +57,45 @@
 <body>
 <div class="sheet">
   <header>
-    <h1>子豚舎 棚卸 操作マニュアル</h1>
-    <div class="sub">古井農場 子豚舎（1〜8号室）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
+    <h1>肉豚舎 棚卸 操作マニュアル</h1>
+    <div class="sub">古井第2農場（201〜217棟）／古井第3農場（301〜312棟）<br>スマホ入力 → 肥育事務所へ送って印刷</div>
   </header>
 
   <div class="links">
-    <div class="row"><span class="tag">リンク</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/kobuta.html</span></div>
-    <div class="note">Safari／Chrome で開きます。共有ボタン →「ホーム画面に追加」でアイコン化すると次回から便利です。</div>
+    <div class="row"><span class="tag">第2農場</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/koi-dai2-nikuton.html</span></div>
+    <div class="row"><span class="tag">第3農場</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/koi-dai3-nikuton.html</span></div>
+    <div class="note">担当の農場のリンクを Safari／Chrome で開きます。共有ボタン →「ホーム画面に追加」でアイコン化すると次回から便利です。</div>
   </div>
 
-  <h2>1. iPad・スマホで入力する</h2>
+  <h2>1. スマホで入力する</h2>
   <div class="step"><div class="num">1</div><div class="body"><b>リンクを開き、日付・記録者を入力。</b></div></div>
-  <div class="step"><div class="num">2</div><div class="body"><b>号室タブ（1〜8号室）を選び、各房の頭数・体重を入力。</b><div class="d">中央が通路の複列（右列 手前1〜奥8／左列 奥9〜手前16）。</div></div></div>
-  <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」で確認。</b><div class="d">部屋別の照合（棚卸頭数＝実数／集計頭数＝手入力／差）、体重区分（10・20・30・40kg）。差が出たら入力を見直し。</div></div></div>
-  <div class="step"><div class="num">4</div><div class="body"><b>「飼料の棚卸」に在庫量を入力。</b><div class="d">タンク No.41〜44（たから12／たから20ペレット）と紙袋（ママコロ前期・ミュー前期）。銘柄別の合計が自動計算されます。</div></div></div>
+  <div class="step"><div class="num">2</div><div class="body"><b>棟タブを選び、各房の頭数・体重を入力。</b><div class="d">第2＝201〜217／第3＝301〜312。体重は「この棟に一括」で全房まとめて入力も可。タブの数字＝その棟の頭数（入力状況の目安）。</div></div></div>
+  <div class="step"><div class="num">3</div><div class="body"><b>「集計・印刷」タブで確認。</b><div class="d">体重区分（30〜110kg）、棟別の照合（棚卸頭数＝実数／集計頭数＝手入力／差）。差が出たら入力を見直し。</div></div></div>
+  <div class="step"><div class="num">4</div><div class="body"><b>「飼料の棚卸」に在庫量を入力。</b><div class="d">第2＝タンク50〜59／第3＝タンクA-1〜F-4。銘柄別の合計（たから20/40/70 など）が自動計算されます。</div></div></div>
   <div class="step"><div class="num">5</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています。</div></div></div>
 
-  <h2 class="blue">2. 繁殖事務所へ送って印刷する（どちらか一方でOK）</h2>
+  <h2 class="blue">2. 肥育事務所へ送って印刷する（どちらか一方でOK）</h2>
   <div class="cols">
     <div class="card A">
       <div class="ttl">方法A：データを送る<span class="rec">おすすめ・きれいに印刷</span></div>
-      <div class="who">▼ iPad・スマホ（担当者）</div>
+      <div class="who">▼ スマホ（担当者）</div>
       <ol>
-        <li>「集計・チェック」→「<b>バックアップ保存</b>」をタップ（.jsonファイルができます）。</li>
-        <li>そのファイルを<b>メールに添付</b>して事務所へ送信（iPadは共有→メール）。</li>
+        <li>「集計・印刷」タブ →「<b>バックアップ保存</b>」をタップ（.jsonファイルができます）。</li>
+        <li>そのファイルを<b>メールに添付</b>して事務所へ送信（iPhoneは共有→メール）。</li>
       </ol>
       <div class="who">▼ 事務所PC</div>
       <ol>
-        <li>同じリンクを開く →「<b>バックアップ読込</b>」→ 受け取った.jsonを選ぶ。</li>
-        <li>データが入るので「<b>印刷（A4縦・提出用）</b>」→ A4縦・1枚で印刷。</li>
+        <li>同じリンクを開く →「<b>バックアップ復元</b>」→ 受け取った.jsonを選ぶ。</li>
+        <li>データが入るので「<b>印刷 / PDF</b>」→ A4縦・2ページで印刷。</li>
       </ol>
     </div>
     <div class="card B">
       <div class="ttl">方法B：スマホでPDFにして送る</div>
-      <div class="who">▼ iPad・スマホ（担当者）</div>
+      <div class="who">▼ スマホ（担当者）</div>
       <ol>
-        <li>「<b>印刷（A4縦・提出用）</b>」をタップ。</li>
-        <li>iPad/iPhone：プレビュー右上の<b>共有</b>→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
-        <li>保存した<b>PDF（1ページ）をメール添付</b>して事務所へ送信。</li>
+        <li>「<b>印刷 / PDF</b>」をタップ。</li>
+        <li>iPhone：プレビュー右上の<b>共有</b>→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
+        <li>保存した<b>PDF（2ページ）をメール添付</b>して事務所へ送信。</li>
       </ol>
       <div class="who">▼ 事務所PC</div>
       <ol>
@@ -101,19 +104,19 @@
     </div>
   </div>
 
-  <div class="mail">データ・PDFの送付先（繁殖事務所）　<b>h-koi@mnet.ne.jp</b></div>
+  <div class="mail">データ・PDFの送付先（肥育事務所）　<b>h-koi2@mnet.ne.jp</b></div>
 
   <div class="notes">
     <b>注意事項</b>
     <ul>
-      <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。複数人で分担した場合は、各自の.jsonを事務所で「<b>部屋を合算して読込</b>」すると、入力済みの部屋だけが取り込まれ合算されます（同じ部屋は後勝ち）。</li>
-      <li>印刷は<b>A4縦・1枚</b>（部屋別照合・体重区分・飼料の棚卸・全8部屋の房別明細＝頭数・体重kg）。</li>
-      <li>「<b>この棚卸を消去</b>」は全消去です。次回の棚卸を白紙で始めるときだけ使ってください。</li>
-      <li>「CSVで書き出し」は表計算ソフト用の記録です（印刷用は方法A/Bを使用）。</li>
+      <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。別の端末では前回データは出ません。担当を分けた場合は<b>方法A</b>でまとめてください（各自の.jsonを事務所で1つずつ復元）。</li>
+      <li>印刷は<b>2枚</b>（1枚目：棟別照合・体重区分・飼料の棚卸／2枚目：全棟の房別明細＝頭数・体重kg）。</li>
+      <li>「<b>データをクリア</b>」は全消去です。次回の棚卸を白紙で始めるときだけ使ってください。</li>
+      <li>「CSVで書き出す」は表計算ソフト用の記録です（印刷用は方法A/Bを使用）。</li>
     </ul>
   </div>
 
-  <footer>古井農場 子豚舎 棚卸システム</footer>
+  <footer>古井農場 肉豚舎 棚卸システム／第2・第3農場</footer>
 </div>
 </body>
 </html>
