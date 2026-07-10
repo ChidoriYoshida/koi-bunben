@@ -63,14 +63,14 @@ table.total tr.tot td{background:#1a1a1a;color:#fff;font-weight:800}
   body{background:#fff}
   .tab-bar,.section,.btn-row,.save-status,.meta-row,h1{display:none !important}
   #print-area{display:block !important}
-  @page{size:A4 portrait;margin:12mm 9mm 10mm 16mm}
+  @page{size:A4 portrait;margin:11mm 9mm 8mm 15mm}
 }
-.pd-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:4px;margin-bottom:8px}
-.pd-title{font-size:17px;font-weight:800}
-.pd-right{font-size:11px;font-weight:700;text-align:right}
-.pd-sec{font-size:11px;font-weight:800;margin:10px 0 3px}
-table.pd{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:4px}
-table.pd th,table.pd td{border:1px solid #000;padding:3px 6px;text-align:center}
+.pd-head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:3px;margin-bottom:6px}
+.pd-title{font-size:15px;font-weight:800}
+.pd-right{font-size:10px;font-weight:700;text-align:right}
+.pd-sec{font-size:10px;font-weight:800;margin:7px 0 2px}
+table.pd{width:100%;border-collapse:collapse;font-size:10.5px;margin-bottom:3px}
+table.pd th,table.pd td{border:1px solid #000;padding:1.8px 5px;text-align:center}
 table.pd th{background:#e8e8e8}
 table.pd td.l{text-align:left;font-weight:700}
 table.pd td.b{font-weight:800;background:#f3f3f3}
@@ -305,9 +305,9 @@ function renderSum(){
   var gt=grandTotal(g);
   rows+='<tr class="tot"><td class="type">合計</td><td>'+gt+'</td><td></td><td></td></tr>';
   var el=document.getElementById('sec-sum');
-  el.innerHTML='<div class="card"><h2>種類別 総集計（集計＝各豚舎の合算／棚卸＝手入力／差）</h2>'+
-    '<div class="hint">「棚卸」に管理上の実数を入力すると差（棚卸−集計）を表示します。手入力はこの表だけです。</div>'+
-    '<div class="scroll"><table class="total"><thead><tr><th>種類</th><th>集計</th><th>棚卸（手入力）</th><th>差</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+  el.innerHTML='<div class="card"><h2>種類別 総集計</h2>'+
+    '<div class="hint">「棚卸頭数（実数）」は各豚舎の集計の合算です。「集計頭数（手入力）」に管理上の頭数を入れると差（集計頭数−棚卸頭数）を表示します。手入力はこの表だけです。</div>'+
+    '<div class="scroll"><table class="total"><thead><tr><th>種類</th><th>棚卸頭数<br>（実数）</th><th>集計頭数<br>（手入力）</th><th>差</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
     '<div class="card"><h2>各豚舎内 集計</h2>'+areaSubHTML()+'</div>';
   el.querySelectorAll('[data-book]').forEach(function(inp){
     inp.addEventListener('input',function(){state.book[inp.dataset.book]=inp.value;var g2=grandByType();document.getElementById('df-'+inp.dataset.book).innerHTML=diffHTML(g2[inp.dataset.book],inp.value);autoSave();});
@@ -339,8 +339,8 @@ function buildPrint(){
   document.getElementById('print-area').innerHTML=
     '<div class="pd-head"><div class="pd-title">古井農場　母豚舎（交配部門）棚卸表</div>'+
       '<div class="pd-right">記入日：'+(m.year||'　　')+' 年 '+(m.month||'　')+' 月 '+(m.day||'　')+' 日　／　記録者：'+(m.rec||'　　　　')+'</div></div>'+
-    '<div class="pd-sec">種類別 総集計（集計／棚卸／差）</div>'+
-    '<table class="pd"><thead><tr><th>種類</th><th>集計</th><th>棚卸</th><th>差</th></tr></thead><tbody>'+body+'</tbody></table>'+
+    '<div class="pd-sec">種類別 総集計（棚卸頭数＝実数／集計頭数＝手入力／差）</div>'+
+    '<table class="pd"><thead><tr><th>種類</th><th>棚卸頭数（実数）</th><th>集計頭数（手入力）</th><th>差</th></tr></thead><tbody>'+body+'</tbody></table>'+
     '<div class="pd-sec">各豚舎内 集計</div>'+
     '<div class="pd-cols"><div>'+area('育成舎',[['育成PS',ik.PS],['育成GP',ik.GP],['育成♂',ik.M]])+area('AIセンター',[['PSオス',ai.PS],['GPオス',ai.GP],['HDオス',ai.HD]])+'</div>'+
     '<div>'+area('母豚舎',[['見せオス',bo.mise],['育成PS',bo.iPS],['育成GP',bo.iGP],['母豚PS',bo.boPS],['母豚GP',bo.boGP]])+'</div></div>'+
