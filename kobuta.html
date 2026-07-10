@@ -127,26 +127,26 @@
     .pd-title{font-size:17px;font-weight:800;line-height:1.2}
     .pd-headright{font-size:10.5px;font-weight:700;text-align:right;line-height:1.5}
     .pd-table{width:100%;border-collapse:collapse;table-layout:fixed}
-    .pd-table th,.pd-table td{border:1px solid #000;padding:3px 4px;text-align:center;font-size:12.5px;font-variant-numeric:tabular-nums}
-    .pd-table thead th{background:#e8e8e8;font-weight:700;font-size:11px}
+    .pd-table th,.pd-table td{border:1px solid #000;padding:1.8px 4px;text-align:center;font-size:11px;font-variant-numeric:tabular-nums}
+    .pd-table thead th{background:#e8e8e8;font-weight:700;font-size:10px}
     .pd-table td.room{font-weight:700}
     .pd-table td.big{font-weight:800;background:#f3f3f3}
     .pd-table .total td{font-weight:800;background:#e0e0e0;border-top:2px solid #000}
     .pd-table td.ng{font-weight:800}
-    .pd-sub{font-size:8.5px;margin:2px 2px 2px}
-    .pd-secttl{font-size:9.5px;font-weight:700;margin:6px 0 2px}
-    .pd-rooms{display:flex;flex-wrap:wrap;gap:3.5mm 3mm;margin-top:2mm}
-    .pd-room{flex:0 0 calc((100% - 9mm)/4);min-width:0}
-    .pd-rtitle{font-size:10px;font-weight:700;text-align:center;border:1px solid #000;background:#e8e8e8;padding:2px 0;margin-bottom:1.5px;white-space:nowrap;overflow:hidden}
-    .pd-krow{display:flex;gap:1.5px;margin-bottom:1.5px}
-    .pd-cell{flex:1;min-width:0;border:1px solid #bbb;height:6.6mm;display:flex;align-items:center;justify-content:space-between;padding:0 1.2mm;overflow:hidden}
-    .pd-cell .n{font-size:8px;color:#000;flex:0 0 auto}
-    .pd-cell .hw{display:flex;align-items:baseline;gap:1mm;margin-left:auto}
-    .pd-cell .h{font-size:12px;font-weight:800}
-    .pd-cell .w{font-size:8.5px;color:#000}
-    .pd-cell .w:not(:empty)::before{content:"/";color:#555;padding-right:.3mm}
+    .pd-sub{font-size:8px;margin:1px 2px}
+    .pd-secttl{font-size:9px;font-weight:700;margin:4px 0 1px}
+    .pd-rooms{display:flex;flex-wrap:wrap;gap:2.2mm 2.5mm;margin-top:1.5mm}
+    .pd-room{flex:0 0 calc((100% - 7.5mm)/4);min-width:0}
+    .pd-rtitle{font-size:9px;font-weight:700;text-align:center;border:1px solid #000;background:#e8e8e8;padding:1.2px 0;margin-bottom:1px;white-space:nowrap;overflow:hidden}
+    .pd-krow{display:flex;gap:1px;margin-bottom:1px}
+    .pd-cell{flex:1;min-width:0;border:1px solid #bbb;height:5mm;display:flex;align-items:center;justify-content:space-between;padding:0 1mm;overflow:hidden}
+    .pd-cell .n{font-size:7px;color:#000;flex:0 0 auto}
+    .pd-cell .hw{display:flex;align-items:baseline;gap:.8mm;margin-left:auto}
+    .pd-cell .h{font-size:10px;font-weight:800}
+    .pd-cell .w{font-size:7.5px;color:#000}
+    .pd-cell .w:not(:empty)::before{content:"/";color:#555;padding-right:.2mm}
     .pd-cell.z .h{color:#ccc;font-weight:600}
-    .pd-aisle{flex:0 0 5px}
+    .pd-aisle{flex:0 0 4px}
     .pagebreak{page-break-before:always}
   }
 
@@ -186,11 +186,36 @@ function freshState(){
     rooms[r]={pens:{},sub:""};
     for(var p=1;p<=PENS;p++) rooms[r].pens[p]={head:"",weight:""};
   });
-  return {meta:{date:iso,recorder:""},rooms:rooms};
+  return {meta:{date:iso,recorder:""},rooms:rooms,feedTank:{41:"",42:"",43:"",44:""},feedBag:{"ママコロ前期":"","ミュー前期":""}};
 }
 function load(){try{var s=localStorage.getItem(STORE_KEY);return s?JSON.parse(s):null;}catch(e){return null;}}
 function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(state));flashSaved();}catch(e){}}
 var state=load()||freshState();
+if(!state.feedTank) state.feedTank={41:"",42:"",43:"",44:""};
+if(!state.feedBag) state.feedBag={"ママコロ前期":"","ミュー前期":""};
+var FEED_TANKS=[{no:41,brand:"たから12"},{no:42,brand:"たから20ペレット"},{no:43,brand:"たから12"},{no:44,brand:"たから20ペレット"}];
+var FEED_BAGS=["ママコロ前期","ミュー前期"];
+function feedTotals(){
+  var g={};
+  g["たから12"]=(parseFloat(state.feedTank[41])||0)+(parseFloat(state.feedTank[43])||0);
+  g["たから20ペレット"]=(parseFloat(state.feedTank[42])||0)+(parseFloat(state.feedTank[44])||0);
+  g["ママコロ前期"]=parseFloat(state.feedBag["ママコロ前期"])||0;
+  g["ミュー前期"]=parseFloat(state.feedBag["ミュー前期"])||0;
+  return g;
+}
+function fmtf(n){return (Math.round(n*100)/100).toString();}
+function feedTotalRows(withId){
+  var ft=feedTotals();
+  function row(name,val,unit,id){return '<tr><td class="room">'+name+'</td><td class="tnum"'+(id?' id="'+id+'"':'')+'>'+fmtf(val)+'</td><td>'+unit+'</td></tr>';}
+  return row("たから12",ft["たから12"],"t",withId?"ftot-t12":"")+
+    row("たから20ペレット",ft["たから20ペレット"],"t",withId?"ftot-t20":"")+
+    row("ママコロ前期",ft["ママコロ前期"],"袋",withId?"ftot-mama":"")+
+    row("ミュー前期",ft["ミュー前期"],"袋",withId?"ftot-myu":"");
+}
+function updateFeedTotalsInline(){
+  var ft=feedTotals(),m={"ftot-t12":"たから12","ftot-t20":"たから20ペレット","ftot-mama":"ママコロ前期","ftot-myu":"ミュー前期"};
+  Object.keys(m).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=fmtf(ft[m[id]]);});
+}
 migrate(state);
 function migrate(s){
   if(!s.meta)s.meta={date:"",recorder:""};
@@ -387,6 +412,18 @@ function renderSum(){
       '<thead><tr><th>部屋</th><th>10kg</th><th>20kg</th><th>30kg</th><th>40kg</th>'+(showX?'<th>未分類</th>':'')+'<th>計</th></tr></thead>'+
       '<tbody>'+bandRows+'</tbody>'+
     '</table></div>'+
+    '<div class="secttl"><h3>飼料の棚卸</h3><span class="hint">タンク（t）・紙袋製品（袋）。銘柄ごとに在庫を集計</span></div>'+
+    '<div class="sumwrap"><table class="sumtable">'+
+      '<thead><tr><th>区分</th><th>銘柄</th><th>在庫量</th><th>単位</th></tr></thead>'+
+      '<tbody>'+
+        FEED_TANKS.map(function(t){return '<tr><td class="room">No.'+t.no+'</td><td>'+t.brand+'</td><td><input class="feedt tnum" data-tank="'+t.no+'" inputmode="decimal" value="'+(state.feedTank[t.no]||"")+'" placeholder="—"></td><td>t</td></tr>';}).join("")+
+        FEED_BAGS.map(function(b){return '<tr><td class="room">紙袋</td><td>'+b+'</td><td><input class="feedb tnum" data-bag="'+b+'" inputmode="decimal" value="'+(state.feedBag[b]||"")+'" placeholder="—"></td><td>袋</td></tr>';}).join("")+
+      '</tbody>'+
+    '</table></div>'+
+    '<div class="sumwrap" style="margin-top:12px"><table class="sumtable">'+
+      '<thead><tr><th>銘柄別 合計</th><th>在庫量</th><th>単位</th></tr></thead>'+
+      '<tbody>'+feedTotalRows(true)+'</tbody>'+
+    '</table></div>'+
     '<div class="actions">'+
       '<button class="primary" id="btnPrint">印刷（A4縦・提出用）</button>'+
       '<button id="btnCsv">CSVで書き出し</button>'+
@@ -405,6 +442,18 @@ function renderSum(){
       var v=e.target.value.replace(/[^\d]/g,"");e.target.value=v;
       var r=Number(e.target.dataset.r);state.rooms[r].sub=v;save();
       document.getElementById("sd-"+r).innerHTML=diffCell(roomHead(r),v);syncNav();
+    });
+  });
+  mainEl.querySelectorAll("input.feedt").forEach(function(el){
+    el.addEventListener("input",function(e){
+      var v=e.target.value.replace(/[^\d.]/g,"");e.target.value=v;
+      state.feedTank[e.target.dataset.tank]=v;save();updateFeedTotalsInline();
+    });
+  });
+  mainEl.querySelectorAll("input.feedb").forEach(function(el){
+    el.addEventListener("input",function(e){
+      var v=e.target.value.replace(/[^\d.]/g,"");e.target.value=v;
+      state.feedBag[e.target.dataset.bag]=v;save();updateFeedTotalsInline();
     });
   });
   document.getElementById("btnCsv").addEventListener("click",exportCsv);
@@ -434,6 +483,17 @@ function pdRoom(r){
   }
   return '<div class="pd-room"><div class="pd-rtitle">'+r+'号室 計'+head+'</div>'+rows+'</div>';
 }
+function feedPrintRows(){
+  var h="";
+  FEED_TANKS.forEach(function(t){h+='<tr><td class="room">No.'+t.no+'</td><td>'+t.brand+'</td><td>'+(state.feedTank[t.no]||"")+'</td><td>t</td></tr>';});
+  FEED_BAGS.forEach(function(b){h+='<tr><td class="room">紙袋</td><td>'+b+'</td><td>'+(state.feedBag[b]||"")+'</td><td>袋</td></tr>';});
+  var ft=feedTotals();
+  h+='<tr class="total"><td class="room" colspan="2">たから12 合計</td><td class="big">'+fmtf(ft["たから12"])+'</td><td>t</td></tr>';
+  h+='<tr class="total"><td class="room" colspan="2">たから20ペレット 合計</td><td class="big">'+fmtf(ft["たから20ペレット"])+'</td><td>t</td></tr>';
+  h+='<tr class="total"><td class="room" colspan="2">ママコロ前期 合計</td><td class="big">'+fmtf(ft["ママコロ前期"])+'</td><td>袋</td></tr>';
+  h+='<tr class="total"><td class="room" colspan="2">ミュー前期 合計</td><td class="big">'+fmtf(ft["ミュー前期"])+'</td><td>袋</td></tr>';
+  return h;
+}
 function buildPrintDoc(){
   var body="";
   ROOMS.forEach(function(r){
@@ -457,6 +517,10 @@ function buildPrintDoc(){
     '<div class="pd-sub">※「棚卸頭数（実数）」は各房の頭数の合計。「集計頭数」は管理上の頭数（手入力）。差は［集計−実数］。</div>'+
     '<div class="pd-secttl">体重区分別 頭数（子豚舎 合計）　5〜15→10／15〜25→20／25〜35→30／35〜→40kg</div>'+
     '<table class="pd-table pd-band"><thead>'+bandHead+'</thead><tbody>'+bandBody+'</tbody></table>'+
+    '<div class="pd-secttl">飼料の棚卸（タンク：t／紙袋製品：袋　銘柄別合計を併記）</div>'+
+    '<table class="pd-table"><colgroup><col style="width:14%"><col style="width:44%"><col style="width:22%"><col style="width:20%"></colgroup>'+
+      '<thead><tr><th>区分</th><th>銘柄</th><th>在庫量</th><th>単位</th></tr></thead>'+
+      '<tbody>'+feedPrintRows()+'</tbody></table>'+
     '<div class="pd-secttl">各部屋 房別明細（中央＝通路／右列 手前1〜奥8・左列 奥9〜手前16　大＝頭数／小＝体重kg）</div>'+
     '<div class="pd-rooms">'+ROOMS.map(pdRoom).join("")+'</div>';
 }
@@ -482,6 +546,16 @@ function exportCsv(){
   });
   var gb=grandBands();
   rows.push(["合計",gb.b10,gb.b20,gb.b30,gb.b40,gb.bx,bandTotal(gb)]);
+  rows.push([]);
+  rows.push(["飼料の棚卸"]);
+  rows.push(["区分","銘柄","在庫量","単位"]);
+  FEED_TANKS.forEach(function(t){rows.push(["No."+t.no,t.brand,state.feedTank[t.no],"t"]);});
+  FEED_BAGS.forEach(function(b){rows.push(["紙袋",b,state.feedBag[b],"袋"]);});
+  var ft=feedTotals();
+  rows.push(["銘柄別合計","たから12",fmtf(ft["たから12"]),"t"]);
+  rows.push(["","たから20ペレット",fmtf(ft["たから20ペレット"]),"t"]);
+  rows.push(["","ママコロ前期",fmtf(ft["ママコロ前期"]),"袋"]);
+  rows.push(["","ミュー前期",fmtf(ft["ミュー前期"]),"袋"]);
   rows.push([]);
   rows.push(["部屋","房番号","頭数","体重","体重区分"]);
   ROOMS.forEach(function(r){
