@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古井農場 棚卸システム 管理者マニュアル</title>
+<style>
+  :root{
+    --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
+    --line:#d3cfc1; --green:#2f6b46; --green-soft:#e3efe6; --blue:#3a6ea5; --blue-soft:#e3edf6;
+    --warn:#b23b2e; --warn-soft:#f6e3df;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.45;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:10mm 12mm 8mm}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--green);padding-bottom:6px;margin-bottom:9px;gap:12px}
+  h1{font-size:19px;font-weight:800;color:var(--green)}
+  header .sub{font-size:11px;color:var(--ink-soft);text-align:right;line-height:1.4}
+  h2{font-size:13.5px;font-weight:800;margin:10px 0 5px;padding-left:8px;border-left:5px solid var(--green)}
+  h2.blue{border-left-color:var(--blue)}
+  h2.warn{border-left-color:var(--warn)}
+  table{width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:2px}
+  th,td{border:1px solid var(--line);padding:4px 7px;text-align:left;vertical-align:middle}
+  thead th{background:var(--green-soft);color:var(--green);font-weight:800;text-align:center}
+  td.c{text-align:center}
+  .u{font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;word-break:break-all}
+  .dept{font-weight:800;border-radius:9px;padding:1px 7px;font-size:10.5px;color:#fff;white-space:nowrap}
+  .dept.breed{background:var(--green)}
+  .dept.feed{background:var(--blue)}
+  .flow{display:flex;gap:8px;align-items:stretch;margin:5px 0 2px}
+  .flow .box{flex:1;border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:11.5px;background:#faf8f1}
+  .flow .box.g{border-color:var(--green);background:var(--green-soft)}
+  .flow .box .h{font-weight:800;font-size:12px;margin-bottom:3px;color:var(--green)}
+  .flow .arrow{align-self:center;font-weight:800;color:var(--ink-soft);font-size:15px}
+  ol.steps{margin:2px 0 2px 3px;list-style:none;counter-reset:s}
+  ol.steps li{position:relative;padding:2.5px 0 2.5px 22px;font-size:12px;counter-increment:s}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:2.5px;width:16px;height:16px;border-radius:50%;background:var(--green);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  ol.steps b{color:var(--ink)}
+  .two{display:flex;gap:12px}
+  .two>div{flex:1}
+  .mail{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:9px;padding:7px 12px;margin:8px 0;font-size:12px}
+  .mail b{color:var(--warn);font-family:"SFMono-Regular",Consolas,monospace}
+  .mail .row{display:flex;justify-content:space-between;gap:10px;margin:1px 0}
+  .notes{font-size:11px;color:var(--ink-soft)}
+  .notes li{margin:1.5px 0 1.5px 15px}
+  .notes b{color:var(--ink)}
+  footer{margin-top:8px;text-align:right;font-size:10px;color:var(--ink-soft)}
+  @page{size:A4 portrait;margin:8mm}
+  @media print{body{background:#fff}.sheet{max-width:100%;padding:0}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>棚卸システム 管理者マニュアル</h1>
+    <div class="sub">古井農場（繁殖：分娩・子豚／肥育：肉豚 第2・第3）<br>担当者はスマホ・iPadで入力 → 事務所で受領して印刷</div>
+  </header>
+
+  <h2>システム一覧（入力リンク）</h2>
+  <table>
+    <thead><tr><th style="width:64px">部門</th><th style="width:96px">舎</th><th>入力リンク（担当者が開く）</th><th style="width:74px">印刷</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><span class="dept breed">繁殖</span></td><td>分娩舎</td><td class="u">https://chidoriyoshida.github.io/koi-bunben/</td><td class="c">A4縦</td></tr>
+      <tr><td class="c"><span class="dept breed">繁殖</span></td><td>子豚舎</td><td class="u">https://chidoriyoshida.github.io/koi-bunben/kobuta.html</td><td class="c">A4縦 1枚</td></tr>
+      <tr><td class="c"><span class="dept feed">肥育</span></td><td>第2農場 肉豚</td><td class="u">https://chidoriyoshida.github.io/koi-bunben/koi-dai2-nikuton.html</td><td class="c">A4縦 2枚</td></tr>
+      <tr><td class="c"><span class="dept feed">肥育</span></td><td>第3農場 肉豚</td><td class="u">https://chidoriyoshida.github.io/koi-bunben/koi-dai3-nikuton.html</td><td class="c">A4縦 2枚</td></tr>
+    </tbody>
+  </table>
+
+  <h2>全体の流れ（全部門 共通・方法A）</h2>
+  <div class="flow">
+    <div class="box g"><div class="h">① 担当者（スマホ・iPad）</div>各舎のリンクで入力 → 「集計」画面で「バックアップ保存」→ <b>.json</b> ができる</div>
+    <div class="arrow">→</div>
+    <div class="box g"><div class="h">② メール送付</div>.json を部門の事務所へ<b>メール添付</b>で送信</div>
+    <div class="arrow">→</div>
+    <div class="box g"><div class="h">③ 事務所PC</div>同じリンクを開く →「バックアップ読込」→ <b>印刷</b></div>
+  </div>
+  <div class="notes">※ 担当者側で「印刷／PDF」からPDF化してメール送付する<b>方法B</b>も可（事務所はPDFをそのまま印刷）。</div>
+
+  <div class="two">
+    <div>
+      <h2 class="blue">事務所での受領・印刷</h2>
+      <ol class="steps">
+        <li>メールの <b>.json</b> を端末に保存。</li>
+        <li>該当する<b>入力リンク</b>を開く。</li>
+        <li>「集計」画面 →「<b>バックアップ読込</b>」→ .json を選ぶ。</li>
+        <li>データが入る →「<b>印刷</b>」で出力。</li>
+        <li>分担時は「<b>部屋を合算して読込</b>」で各自の.jsonを1つずつ取り込む（入力済みの部屋だけ合算・同じ部屋は後勝ち）。</li>
+      </ol>
+    </div>
+    <div>
+      <h2 class="blue">担当者への配布（操作マニュアル）</h2>
+      <table>
+        <thead><tr><th>部門/舎</th><th>マニュアル ファイル</th></tr></thead>
+        <tbody>
+          <tr><td>分娩舎</td><td class="u">manual.html</td></tr>
+          <tr><td>子豚舎</td><td class="u">kobuta-manual.html</td></tr>
+          <tr><td>肉豚 第2・第3</td><td class="u">koi-nikuton-manual.html</td></tr>
+        </tbody>
+      </table>
+      <div class="notes" style="margin-top:3px">印刷して配布するか、リンクで共有（例：<span class="u">.../koi-bunben/kobuta-manual.html</span>）。</div>
+    </div>
+  </div>
+
+  <div class="mail">
+    <div class="row"><span><b>繁殖</b>部門（分娩・子豚）の送付先</span><span><b>h-koi@mnet.ne.jp</b></span></div>
+    <div class="row"><span><b>肥育</b>部門（肉豚 第2・第3）の送付先</span><span><b>h-koi2@mnet.ne.jp</b></span></div>
+  </div>
+
+  <div class="two">
+    <div>
+      <h2 class="warn">システムの更新（GitHub）</h2>
+      <ol class="steps">
+        <li>リポジトリ <b>koi-bunben</b> を開く。</li>
+        <li>「Add file → Upload files」で新ファイルをドラッグ。</li>
+        <li><b>同じファイル名で上書き</b>して「Commit changes」。</li>
+        <li>数分で全員のリンクが最新化（担当者の再アップロード不要）。</li>
+      </ol>
+      <div class="notes" style="margin-top:2px">ファイル名：index.html / kobuta.html / koi-dai2-nikuton.html / koi-dai3-nikuton.html と各マニュアル。</div>
+    </div>
+    <div>
+      <h2 class="warn">トラブル対応</h2>
+      <ul class="notes" style="margin-top:2px">
+        <li><b>画面が真っ白</b>：数分待って再読み込み（公開直後は反映待ち）。</li>
+        <li><b>前回データが出ない</b>：データは端末ごと保存のため。方法Aで.jsonを受け渡す。</li>
+        <li><b>データが消えた</b>：保存済みの<b>.json</b>から「バックアップ読込」で復元。</li>
+        <li><b>「クリア／消去」</b>は全消去。次回の棚卸開始時のみ使用。</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>古井農場 棚卸システム（分娩・子豚・肉豚 第2/第3）／管理者用</footer>
+</div>
+</body>
+</html>
