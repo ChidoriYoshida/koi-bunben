@@ -131,7 +131,7 @@ const FEED_TBRANDS=['シンサウメイク','たから母豚'];
 
 function freshState(){
   var s={meta:{year:'',month:'',day:'',rec:''},
-    iku:{}, kohai:[], ninton:[], mise:'', ai:{PS:'',GP:'',HD:''}, book:{}};
+    iku:{}, kohai:[], ninton:[], ai:{PS:'',GP:'',HD:''}, book:{}};
   IKU_PENS.forEach(function(p){ s.iku[p]={PS:'',GP:'',M:''}; });
   for(var i=0;i<10;i++){ s.kohai.push({mise:'',iPS:'',iGP:'',bPS:'',bGP:''}); s.ninton.push({bPS:'',bGP:''}); }
   TYPES.forEach(function(t){ s.book[t[0]]=''; });
@@ -162,7 +162,6 @@ function normalize(){
   if(!state.kohai||state.kohai.length<10){ state.kohai=state.kohai||[]; while(state.kohai.length<10) state.kohai.push({mise:'',iPS:'',iGP:'',bPS:'',bGP:''}); }
   if(!state.ninton||state.ninton.length<10){ state.ninton=state.ninton||[]; while(state.ninton.length<10) state.ninton.push({bPS:'',bGP:''}); }
   if(!state.ai) state.ai={PS:'',GP:'',HD:''};
-  if(state.mise==null) state.mise='';
   if(!state.book) state.book={}; TYPES.forEach(function(t){ if(state.book[t[0]]==null) state.book[t[0]]=''; });
   if(!state.feedTank) state.feedTank={}; FEED_TANKS.forEach(function(t){ if(state.feedTank[t.no]==null) state.feedTank[t.no]=''; });
   if(!state.feedBag) state.feedBag={}; FEED_BAGS.forEach(function(b){ if(state.feedBag[b.name]==null) state.feedBag[b.name]=''; });
@@ -174,9 +173,9 @@ function num(v){var n=parseInt(v);return isNaN(n)?0:n;}
 function ikuSub(){var o={PS:0,GP:0,M:0};IKU_PENS.forEach(function(p){var c=state.iku[p];o.PS+=num(c.PS);o.GP+=num(c.GP);o.M+=num(c.M);});return o;}
 function kohaiSub(){var o={mise:0,iPS:0,iGP:0,bPS:0,bGP:0};state.kohai.forEach(function(u){o.mise+=num(u.mise);o.iPS+=num(u.iPS);o.iGP+=num(u.iGP);o.bPS+=num(u.bPS);o.bGP+=num(u.bGP);});return o;}
 function nintonSub(){var o={bPS:0,bGP:0};state.ninton.forEach(function(u){o.bPS+=num(u.bPS);o.bGP+=num(u.bGP);});return o;}
-function botaSub(){ // 母豚舎内（交配+妊豚+別枠見せオス）
+function botaSub(){ // 母豚舎内（交配+妊豚）
   var k=kohaiSub(),n=nintonSub();
-  return {mise:k.mise+num(state.mise), iPS:k.iPS, iGP:k.iGP, boPS:k.bPS+n.bPS, boGP:k.bGP+n.bGP};
+  return {mise:k.mise, iPS:k.iPS, iGP:k.iGP, boPS:k.bPS+n.bPS, boGP:k.bGP+n.bGP};
 }
 function aiSub(){return {PS:num(state.ai.PS),GP:num(state.ai.GP),HD:num(state.ai.HD)};}
 function grandByType(){
@@ -252,14 +251,12 @@ function botaHTML(){
   for(var j=0;j<10;j++){ nh+='<tr><td class="lbl">'+circ(j+1)+'</td>'+NIN_COLS.map(function(c){return '<td><input type="number" inputmode="numeric" min="0" data-nin="'+j+'" data-k="'+c[0]+'"></td>';}).join('')+'</tr>'; }
   nh+='</tbody></table></div>';
   return '<div class="card"><h2>交配スペース（①〜⑩）</h2><div class="hint">各ユニットに見せオス／育成PS／育成GP／母豚PS／母豚GPの頭数を入力。</div>'+kh+'</div>'+
-    '<div class="card"><h2>妊豚スペース（①〜⑩）</h2><div class="hint">各ユニットに母豚PS／母豚GPの頭数を入力。</div>'+nh+'</div>'+
-    '<div class="card"><h2>見せオス（別枠）</h2><div class="bulk"><label>見せオス</label><input type="number" inputmode="numeric" min="0" id="miseInp" style="width:80px"><span class="hint" style="margin:0">頭</span></div>'+
+    '<div class="card"><h2>妊豚スペース（①〜⑩）</h2><div class="hint">各ユニットに母豚PS／母豚GPの頭数を入力。</div>'+nh+
     '<div class="sub"><div class="row"><span>母豚舎内集計 →</span><span>見せオス <b id="bs-mise">0</b></span><span>育成PS <b id="bs-iPS">0</b></span><span>育成GP <b id="bs-iGP">0</b></span><span>母豚PS <b id="bs-boPS">0</b></span><span>母豚GP <b id="bs-boGP">0</b></span></div></div></div>';
 }
 function wireBota(){
   document.querySelectorAll('[data-koh]').forEach(function(el){el.value=state.kohai[+el.dataset.koh][el.dataset.k];el.addEventListener('input',function(){state.kohai[+el.dataset.koh][el.dataset.k]=el.value;updateBotaSub();autoSave();});});
   document.querySelectorAll('[data-nin]').forEach(function(el){el.value=state.ninton[+el.dataset.nin][el.dataset.k];el.addEventListener('input',function(){state.ninton[+el.dataset.nin][el.dataset.k]=el.value;updateBotaSub();autoSave();});});
-  var m=document.getElementById('miseInp');m.value=state.mise;m.addEventListener('input',function(){state.mise=m.value;updateBotaSub();autoSave();});
   updateBotaSub();
 }
 function updateBotaSub(){var o=botaSub();set('bs-mise',o.mise);set('bs-iPS',o.iPS);set('bs-iGP',o.iGP);set('bs-boPS',o.boPS);set('bs-boGP',o.boGP);}
@@ -414,7 +411,6 @@ function doMergeState(inc){
   }); }
   if(inc.kohai){ for(var i=0;i<10;i++){ var u=inc.kohai[i]; if(!u) continue; ['mise','iPS','iGP','bPS','bGP'].forEach(function(k){ state.kohai[i][k]=mergeVal(state.kohai[i][k], u[k]); }); } }
   if(inc.ninton){ for(var j=0;j<10;j++){ var v=inc.ninton[j]; if(!v) continue; ['bPS','bGP'].forEach(function(k){ state.ninton[j][k]=mergeVal(state.ninton[j][k], v[k]); }); } }
-  state.mise=mergeVal(state.mise, inc.mise);
   if(inc.ai){ ['PS','GP','HD'].forEach(function(k){ state.ai[k]=mergeVal(state.ai[k], inc.ai[k]); }); }
   if(inc.book){ TYPES.forEach(function(t){ state.book[t[0]]=mergeVal(state.book[t[0]], inc.book[t[0]]); }); }
   if(inc.feedTank){ FEED_TANKS.forEach(function(t){ state.feedTank[t.no]=mergeVal(state.feedTank[t.no], inc.feedTank[t.no]); }); }
