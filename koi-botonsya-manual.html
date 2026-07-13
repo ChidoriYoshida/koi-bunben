@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古井農場 母豚舎（交配部門）棚卸 操作マニュアル</title>
+<style>
+  :root{
+    --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
+    --line:#d3cfc1; --green:#2f6b46; --green-soft:#e3efe6; --blue:#3a6ea5; --blue-soft:#e3edf6;
+    --warn:#b23b2e; --warn-soft:#f6e3df;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:11mm 12mm 9mm}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--green);padding-bottom:6px;margin-bottom:10px;gap:12px}
+  h1{font-size:19px;font-weight:800;color:var(--green)}
+  header .sub{font-size:11px;color:var(--ink-soft);text-align:right;line-height:1.4}
+  .links{background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:9px 13px;font-size:12.5px;margin-bottom:11px}
+  .links .row{display:flex;gap:8px;align-items:baseline;margin:2px 0}
+  .links .tag{flex:0 0 64px;font-weight:800;color:var(--green)}
+  .links .u{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;word-break:break-all}
+  .links .note{font-size:11px;color:var(--ink-soft);margin-top:4px}
+  h2{font-size:14.5px;font-weight:800;margin:11px 0 6px;padding-left:9px;border-left:5px solid var(--green)}
+  h2.blue{border-left-color:var(--blue)}
+  .step{display:flex;gap:9px;margin:5px 0}
+  .num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .step .body{flex:1;font-size:13px}
+  .step .body b{color:var(--ink)}
+  .step .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
+  .cols{display:flex;gap:11px;margin-top:4px}
+  .card{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#faf8f1}
+  .card.A{border-color:var(--green);background:var(--green-soft)}
+  .card.B{border-color:var(--blue);background:var(--blue-soft)}
+  .card .ttl{font-size:13.5px;font-weight:800;margin-bottom:5px}
+  .card.A .ttl{color:var(--green)}
+  .card.B .ttl{color:var(--blue)}
+  .card .rec{display:inline-block;font-size:10.5px;font-weight:800;background:var(--green);color:#fff;border-radius:10px;padding:1px 7px;margin-left:5px;vertical-align:middle}
+  .card ol{margin:0 0 0 3px;padding:0;list-style:none;counter-reset:s}
+  .card ol li{position:relative;padding:3px 0 3px 22px;font-size:12.5px;counter-increment:s}
+  .card ol li::before{content:counter(s);position:absolute;left:0;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;border:1.5px solid currentColor;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .card.A ol li::before{color:var(--green)}
+  .card.B ol li::before{color:var(--blue)}
+  .card .who{font-size:11px;font-weight:800;color:var(--ink-soft);margin:4px 0 1px}
+  .mail{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:10px;padding:9px 13px;margin:10px 0;font-size:13px;text-align:center}
+  .mail b{color:var(--warn);font-size:15px;font-family:"SFMono-Regular",Consolas,monospace}
+  .notes{border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin-top:9px;font-size:11.5px;color:var(--ink-soft)}
+  .notes b{color:var(--ink)}
+  .notes li{margin:2px 0 2px 16px}
+  footer{margin-top:8px;text-align:right;font-size:10px;color:var(--ink-soft)}
+  @page{size:A4 portrait;margin:8mm}
+  @media print{body{background:#fff}.sheet{max-width:100%;padding:0}}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>母豚舎（交配部門）棚卸 操作マニュアル</h1>
+    <div class="sub">古井農場 母豚舎（育成舎・母豚舎・AIセンター）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
+  </header>
+
+  <div class="links">
+    <div class="row"><span class="tag">リンク</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/koi-botonsya.html</span></div>
+    <div class="note">Safari／Chrome で開きます。共有ボタン →「ホーム画面に追加」でアイコン化すると次回から便利です。</div>
+  </div>
+
+  <h2>1. iPad・スマホで入力する</h2>
+  <div class="step"><div class="num">1</div><div class="body"><b>リンクを開き、日付・記録者を入力。</b></div></div>
+  <div class="step"><div class="num">2</div><div class="body"><b>各タブで頭数を入力。</b>
+    <div class="d">・<b>育成舎</b>（39房）：房番号ごとに、育成PS／育成GP／育成♂の列へ頭数。<br>
+    ・<b>母豚舎</b>：交配スペース①〜⑩（見せオス・育成PS・育成GP・母豚PS・母豚GP）／妊豚スペース①〜⑩（母豚PS・母豚GP）／見せオス（別枠）。<br>
+    ・<b>AIセンター</b>：PSオス・GPオス・HDオス。<br>
+    ・<b>飼料</b>：タンク11〜30（シンサウメイク・たから母豚）・紙袋やまとX。</div></div></div>
+  <div class="step"><div class="num">3</div><div class="body"><b>「集計・印刷」で確認。</b>
+    <div class="d">種類別 総集計（棚卸頭数〈実数・自動〉／集計頭数〈手入力〉／差）と各豚舎内集計。「集計頭数」に管理上の頭数を入れると差を照合します（手入力はこの表だけ）。</div></div></div>
+  <div class="step"><div class="num">4</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています。</div></div></div>
+
+  <h2 class="blue">2. 繁殖事務所へ送って印刷する（どちらか一方でOK）</h2>
+  <div class="cols">
+    <div class="card A">
+      <div class="ttl">方法A：データを送る<span class="rec">おすすめ・きれいに印刷</span></div>
+      <div class="who">▼ iPad・スマホ（担当者）</div>
+      <ol>
+        <li>「集計・印刷」→「<b>バックアップ保存</b>」をタップ（.jsonファイルができます）。</li>
+        <li>そのファイルを<b>メールに添付</b>して事務所へ送信（iPadは共有→メール）。</li>
+      </ol>
+      <div class="who">▼ 事務所PC</div>
+      <ol>
+        <li>同じリンクを開く →「<b>バックアップ読込</b>」→ 受け取った.jsonを選ぶ。</li>
+        <li>データが入るので「<b>印刷 / PDF</b>」→ A4縦・1枚で印刷。</li>
+      </ol>
+    </div>
+    <div class="card B">
+      <div class="ttl">方法B：スマホでPDFにして送る</div>
+      <div class="who">▼ iPad・スマホ（担当者）</div>
+      <ol>
+        <li>「<b>印刷 / PDF</b>」をタップ。</li>
+        <li>iPad/iPhone：プレビュー右上の<b>共有</b>→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
+        <li>保存した<b>PDF（1ページ）をメール添付</b>して事務所へ送信。</li>
+      </ol>
+      <div class="who">▼ 事務所PC</div>
+      <ol>
+        <li>受け取ったPDFを開いて<b>そのまま印刷</b>。</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="mail">データ・PDFの送付先（繁殖事務所）　<b>h-koi@mnet.ne.jp</b></div>
+
+  <h2>3. 複数人で分担して入力する場合（合算して読込）</h2>
+  <div class="step"><div class="num">1</div><div class="body"><b>担当エリアを分ける。</b><div class="d">例：Aさん＝育成舎／Bさん＝母豚舎＋AIセンター／Cさん＝飼料。同じ房・スペースを2人が入力しないように分担します。</div></div></div>
+  <div class="step"><div class="num">2</div><div class="body"><b>各自「バックアップ保存」→ ファイル名をリネームしてメール。</b><div class="d">全員同じ名前になるので、例「育成舎_田中.json」のように分かる名前に変えてから送ると取り違え防止に。送付先 h-koi@mnet.ne.jp。</div></div></div>
+  <div class="step"><div class="num">3</div><div class="body"><b>事務所で1台開き、各.jsonを「合算して読込」で1つずつ取り込む。</b><div class="d">「合算して読込」は<b>入力済みのセルだけ</b>を反映し、空欄は既存を消しません（同じセルは後から読んだ方が優先）。※「バックアップ読込」は<b>全置き換え</b>なので分担時は使わない。</div></div></div>
+  <div class="step"><div class="num">4</div><div class="body"><b>「集計・印刷」の差で照合して印刷。</b><div class="d">集計頭数（手入力）を入れて差を確認 → 印刷。</div></div></div>
+
+  <div class="notes">
+    <b>注意事項</b>
+    <ul>
+      <li><b>分娩舎の母豚</b>はこの棚卸には含みません（分娩舎の棚卸アプリで数えます）。二重に数えないようご注意ください。</li>
+      <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。分担時は上の「合算して読込」でまとめます。1台で入力する場合はそのまま方法Aで送付。</li>
+      <li><b>「バックアップ読込」＝全置き換え／「合算して読込」＝入力済みのセルだけ反映（空欄は維持）。</b>分担してまとめる時は必ず「合算して読込」を使ってください。</li>
+      <li>印刷は<b>A4縦・1枚</b>（種類別総集計・各豚舎内集計・飼料の棚卸）。</li>
+      <li>「<b>データをクリア</b>」は全消去です。次回の棚卸を白紙で始めるときだけ使ってください。</li>
+      <li>「CSVで書き出す」は表計算ソフト用の記録です（印刷用は方法A/Bを使用）。</li>
+    </ul>
+  </div>
+
+  <footer>古井農場 母豚舎（交配部門）棚卸システム</footer>
+</div>
+</body>
+</html>
