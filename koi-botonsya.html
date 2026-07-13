@@ -99,6 +99,8 @@ table.pd tr.tot td{background:#1a1a1a;color:#fff;font-weight:800}
     <button class="act" onclick="doBackup()">バックアップ保存</button>
     <button class="act" onclick="document.getElementById('rf').click()">バックアップ読込</button>
     <input type="file" id="rf" accept="application/json" style="display:none" onchange="doRestore(event)">
+    <button class="act" onclick="document.getElementById('mf').click()">合算して読込</button>
+    <input type="file" id="mf" accept="application/json" style="display:none" onchange="doMerge(event)">
     <button class="act warn" onclick="clearAll()">データをクリア</button>
   </div>
   <div class="save-status" id="ss"></div>
@@ -399,6 +401,31 @@ function exportCSV(){
 }
 function doBackup(){syncMeta();dl(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),'母豚舎棚卸_バックアップ.json');}
 function doRestore(ev){var f=ev.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{state=JSON.parse(r.result);normalize();localStorage.setItem(STORE,JSON.stringify(state));location.reload();}catch(e){alert('読み込めませんでした');}};r.readAsText(f);ev.target.value='';}
+function mergeVal(cur,inc){ return (inc!==''&&inc!=null&&inc!==undefined)?inc:cur; }
+function doMergeState(inc){
+  if(!inc||typeof inc!=='object') return;
+  if(inc.meta){ ['year','month','day','rec'].forEach(function(k){ state.meta[k]=mergeVal(state.meta[k], inc.meta[k]); }); }
+  if(inc.iku){ IKU_PENS.forEach(function(p){
+    var ic=inc.iku[p]; if(!ic) return;
+    if(ic.PS===undefined&&ic.GP===undefined&&ic.M===undefined){ var t={PS:'',GP:'',M:''}; if(ic.t&&ic.h!==''&&ic.h!=null) t[ic.t]=ic.h; ic=t; }
+    state.iku[p].PS=mergeVal(state.iku[p].PS, ic.PS);
+    state.iku[p].GP=mergeVal(state.iku[p].GP, ic.GP);
+    state.iku[p].M=mergeVal(state.iku[p].M, ic.M);
+  }); }
+  if(inc.kohai){ for(var i=0;i<10;i++){ var u=inc.kohai[i]; if(!u) continue; ['mise','iPS','iGP','bPS','bGP'].forEach(function(k){ state.kohai[i][k]=mergeVal(state.kohai[i][k], u[k]); }); } }
+  if(inc.ninton){ for(var j=0;j<10;j++){ var v=inc.ninton[j]; if(!v) continue; ['bPS','bGP'].forEach(function(k){ state.ninton[j][k]=mergeVal(state.ninton[j][k], v[k]); }); } }
+  state.mise=mergeVal(state.mise, inc.mise);
+  if(inc.ai){ ['PS','GP','HD'].forEach(function(k){ state.ai[k]=mergeVal(state.ai[k], inc.ai[k]); }); }
+  if(inc.book){ TYPES.forEach(function(t){ state.book[t[0]]=mergeVal(state.book[t[0]], inc.book[t[0]]); }); }
+  if(inc.feedTank){ FEED_TANKS.forEach(function(t){ state.feedTank[t.no]=mergeVal(state.feedTank[t.no], inc.feedTank[t.no]); }); }
+  if(inc.feedBag){ FEED_BAGS.forEach(function(b){ state.feedBag[b.name]=mergeVal(state.feedBag[b.name], inc.feedBag[b.name]); }); }
+}
+function doMerge(ev){
+  var f=ev.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){ try{ var inc=JSON.parse(r.result); doMergeState(inc); saveData(false); buildSections(); switchTab('sum'); st('合算して読み込みました（入力済みのセルを反映）'); }catch(e){ alert('読み込めませんでした'); } };
+  r.readAsText(f); ev.target.value='';
+}
 function dl(blob,name){var u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
 function clearAll(){
   if(!confirm('入力したすべてのデータを消去します。よろしいですか？'))return;
