@@ -77,6 +77,10 @@ table.pd td.b{font-weight:800;background:#f3f3f3}
 table.pd tr.tot td{background:#1a1a1a;color:#fff;font-weight:800}
 .pd-cols{display:flex;gap:10px}
 .pd-cols>div{flex:1}
+.pd-cols3{display:flex;gap:8px}
+.pd-cols3>table{flex:1}
+.pagebreak{page-break-before:always}
+table.pd.pd-det th,table.pd.pd-det td{padding:1.2px 3px;font-size:9.5px}
 </style>
 </head>
 <body>
@@ -354,7 +358,47 @@ function buildPrint(){
     '<div class="pd-sec">各豚舎内 集計</div>'+
     '<div class="pd-cols"><div>'+area('育成舎',[['育成PS',ik.PS],['育成GP',ik.GP],['育成♂',ik.M]])+area('AIセンター',[['PSオス',ai.PS],['GPオス',ai.GP],['HDオス',ai.HD]])+'</div>'+
     '<div>'+area('母豚舎',[['見せオス',bo.mise],['育成PS',bo.iPS],['育成GP',bo.iGP],['母豚PS',bo.boPS],['母豚GP',bo.boGP]])+'</div></div>'+
-    feedPrintHTML();
+    feedPrintHTML()+
+    '<div class="pagebreak"></div>'+
+    detailPrintHTML();
+}
+function dv(v){ var n=parseInt(v); return (!v||isNaN(n)||n===0)?'':String(n); }
+function detailPrintHTML(){
+  // 育成舎 39房を3列に分けて表示
+  var groups=[[],[],[]];
+  for(var p=1;p<=39;p++){ groups[Math.floor((p-1)/13)].push(p); }
+  var ikuTables=groups.map(function(g){
+    var rows=g.map(function(p){
+      var c=state.iku[p];
+      return '<tr><td class="l">'+p+'</td><td>'+dv(c.PS)+'</td><td>'+dv(c.GP)+'</td><td>'+dv(c.M)+'</td></tr>';
+    }).join('');
+    return '<table class="pd pd-det"><thead><tr><th>房</th><th>育成PS</th><th>育成GP</th><th>育成♂</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }).join('');
+  // 交配スペース
+  var kohaiRows=state.kohai.map(function(u,i){
+    return '<tr><td class="l">'+circ(i+1)+'</td><td>'+dv(u.mise)+'</td><td>'+dv(u.iPS)+'</td><td>'+dv(u.iGP)+'</td><td>'+dv(u.bPS)+'</td><td>'+dv(u.bGP)+'</td></tr>';
+  }).join('');
+  var k=kohaiSub();
+  kohaiRows+='<tr class="tot"><td class="l">計</td><td>'+k.mise+'</td><td>'+k.iPS+'</td><td>'+k.iGP+'</td><td>'+k.bPS+'</td><td>'+k.bGP+'</td></tr>';
+  // 妊豚スペース
+  var ninRows=state.ninton.map(function(u,i){
+    return '<tr><td class="l">'+circ(i+1)+'</td><td>'+dv(u.bPS)+'</td><td>'+dv(u.bGP)+'</td></tr>';
+  }).join('');
+  var n=nintonSub();
+  ninRows+='<tr class="tot"><td class="l">計</td><td>'+n.bPS+'</td><td>'+n.bGP+'</td></tr>';
+  var ai=aiSub();
+  return '<div class="pd-sec">育成舎　房別在庫（39房）</div>'+
+    '<div class="pd-cols3">'+ikuTables+'</div>'+
+    '<div class="pd-sec">母豚舎　スペース別在庫</div>'+
+    '<div class="pd-cols">'+
+      '<div><table class="pd"><thead><tr><th>交配</th><th>見せオス</th><th>育成PS</th><th>育成GP</th><th>母豚PS</th><th>母豚GP</th></tr></thead><tbody>'+kohaiRows+'</tbody></table></div>'+
+      '<div><table class="pd"><thead><tr><th>妊豚</th><th>母豚PS</th><th>母豚GP</th></tr></thead><tbody>'+ninRows+'</tbody></table>'+
+      '<table class="pd" style="margin-top:6px"><thead><tr><th colspan="2">AIセンター</th></tr></thead><tbody>'+
+      '<tr><td class="l">PSオス</td><td class="b">'+ai.PS+'</td></tr>'+
+      '<tr><td class="l">GPオス</td><td class="b">'+ai.GP+'</td></tr>'+
+      '<tr><td class="l">HDオス</td><td class="b">'+ai.HD+'</td></tr>'+
+      '</tbody></table></div>'+
+    '</div>';
 }
 function feedPrintHTML(){
   var ft=feedTotals();
