@@ -270,6 +270,10 @@ function buildUI(){
       + '<div class="barn-card">'
       + '<div class="barn-head"><div class="barn-title">'+b.id+'棟</div>'
       + '<div class="barn-stat">頭数合計 <b id="bh-'+b.id+'">0</b></div></div>'
+      + '<div class="bulk-row"><label>頭数 一律入力</label>'
+      + '<input type="number" inputmode="numeric" min="0" id="bulkc-'+b.id+'" placeholder="頭">'
+      + '<button class="bulk-btn" onclick="applyBulkCount(\''+b.id+'\')">この棟に一括</button>'
+      + '<span class="bulk-note">全'+b.pens+'房の頭数にまとめて入力</span></div>'
       + '<div class="bulk-row"><label>体重 一律入力</label>'
       + '<input type="number" inputmode="decimal" min="0" step="0.1" id="bulk-'+b.id+'" placeholder="kg">'
       + '<button class="bulk-btn" onclick="applyBulk(\''+b.id+'\')">この棟に一括</button>'
@@ -340,6 +344,17 @@ function applyBulk(barnId){
   penList(b).forEach(p=>{
     data[barnId][p].weight=val;
     if(refs[barnId][p].w) refs[barnId][p].w.value=val;
+  });
+  updateTotals(); autoSave();
+}
+
+function applyBulkCount(barnId){
+  const val=document.getElementById('bulkc-'+barnId).value;
+  if(val==='') return;
+  const b=BARNS.find(x=>x.id===barnId);
+  penList(b).forEach(p=>{
+    data[barnId][p].count=val;
+    if(refs[barnId][p].c) refs[barnId][p].c.value=val;
   });
   updateTotals(); autoSave();
 }
