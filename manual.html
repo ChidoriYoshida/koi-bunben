@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>古井農場 分娩舎 棚卸 操作マニュアル</title>
+<title>古井農場 分娩舎・子豚舎 棚卸 操作マニュアル</title>
 <style>
   :root{
     --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#fff;
@@ -11,43 +11,46 @@
     --warn:#b23b2e; --warn-soft:#f6e3df; --accent:#23241f;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:11mm 12mm 9mm}
-  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--green);padding-bottom:6px;margin-bottom:10px;gap:12px}
-  h1{font-size:19px;font-weight:800;color:var(--green)}
-  header .sub{font-size:11px;color:var(--ink-soft);text-align:right;line-height:1.4}
-  .links{background:var(--green-soft);border:1px solid var(--green);border-radius:10px;padding:9px 13px;font-size:12.5px;margin-bottom:11px}
-  .links .row{display:flex;gap:8px;align-items:baseline;margin:2px 0}
+  body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Meiryo",sans-serif;color:var(--ink);background:var(--paper);line-height:1.42;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet{max-width:200mm;margin:0 auto;background:var(--panel);padding:9mm 12mm 7mm}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:3px solid var(--green);padding-bottom:5px;margin-bottom:8px;gap:12px}
+  h1{font-size:17px;font-weight:800;color:var(--green)}
+  header .sub{font-size:10.5px;color:var(--ink-soft);text-align:right;line-height:1.35}
+  .links{background:var(--green-soft);border:1px solid var(--green);border-radius:9px;padding:7px 12px;font-size:11.5px;margin-bottom:8px}
+  .links .row{display:flex;gap:8px;align-items:baseline;margin:1px 0}
   .links .tag{flex:0 0 64px;font-weight:800;color:var(--green)}
-  .links .u{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;word-break:break-all}
-  .links .note{font-size:11px;color:var(--ink-soft);margin-top:4px}
-  h2{font-size:14.5px;font-weight:800;margin:12px 0 6px;padding-left:9px;border-left:5px solid var(--green)}
+  .links .u{font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;word-break:break-all}
+  .links .note{font-size:10px;color:var(--ink-soft);margin-top:3px}
+  h2{font-size:13.5px;font-weight:800;margin:9px 0 5px;padding-left:8px;border-left:5px solid var(--green)}
   h2.blue{border-left-color:var(--blue)}
-  .step{display:flex;gap:9px;margin:6px 0}
-  .num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;margin-top:1px}
-  .step .body{flex:1;font-size:13px}
+  .area{display:flex;gap:10px;margin-top:2px}
+  .abox{flex:1;border:1px solid var(--line);border-radius:9px;padding:8px 10px;background:#faf8f1}
+  .abox .ttl{font-size:12.5px;font-weight:800;margin-bottom:3px;color:var(--green)}
+  .step{display:flex;gap:8px;margin:4px 0}
+  .num{flex:0 0 21px;width:21px;height:21px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .step .body{flex:1;font-size:12px}
   .step .body b{color:var(--ink)}
-  .step .d{font-size:12px;color:var(--ink-soft);margin-top:1px}
-  .cols{display:flex;gap:11px;margin-top:4px}
-  .card{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#faf8f1}
+  .step .d{font-size:11px;color:var(--ink-soft);margin-top:1px}
+  .cols{display:flex;gap:10px;margin-top:3px}
+  .card{flex:1;border:1px solid var(--line);border-radius:9px;padding:8px 11px;background:#faf8f1}
   .card.A{border-color:var(--green);background:var(--green-soft)}
   .card.B{border-color:var(--blue);background:var(--blue-soft)}
-  .card .ttl{font-size:13.5px;font-weight:800;margin-bottom:5px}
+  .card .ttl{font-size:12.5px;font-weight:800;margin-bottom:4px}
   .card.A .ttl{color:var(--green)}
   .card.B .ttl{color:var(--blue)}
-  .card .rec{display:inline-block;font-size:10.5px;font-weight:800;background:var(--green);color:#fff;border-radius:10px;padding:1px 7px;margin-left:5px;vertical-align:middle}
-  .card ol{margin:0 0 0 3px;padding:0;list-style:none;counter-reset:s}
-  .card ol li{position:relative;padding:3px 0 3px 22px;font-size:12.5px;counter-increment:s}
-  .card ol li::before{content:counter(s);position:absolute;left:0;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;border:1.5px solid currentColor;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .card .rec{display:inline-block;font-size:9.5px;font-weight:800;background:var(--green);color:#fff;border-radius:9px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+  .card ol{margin:0 0 0 2px;padding:0;list-style:none;counter-reset:s}
+  .card ol li{position:relative;padding:2px 0 2px 20px;font-size:11.5px;counter-increment:s}
+  .card ol li::before{content:counter(s);position:absolute;left:0;top:2px;width:15px;height:15px;border-radius:50%;background:#fff;border:1.5px solid currentColor;font-size:9.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
   .card.A ol li::before{color:var(--green)}
   .card.B ol li::before{color:var(--blue)}
-  .card .who{font-size:11px;font-weight:800;color:var(--ink-soft);margin:4px 0 1px}
-  .mail{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:10px;padding:9px 13px;margin:11px 0;font-size:13px;text-align:center}
-  .mail b{color:var(--warn);font-size:15px;font-family:"SFMono-Regular",Consolas,monospace}
-  .notes{border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin-top:10px;font-size:11.5px;color:var(--ink-soft)}
+  .card .who{font-size:10.5px;font-weight:800;color:var(--ink-soft);margin:3px 0 1px}
+  .mail{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:9px;padding:7px 12px;margin:8px 0;font-size:12px;text-align:center}
+  .mail b{color:var(--warn);font-size:14px;font-family:"SFMono-Regular",Consolas,monospace}
+  .notes{border:1px solid var(--line);border-radius:9px;padding:7px 12px;margin-top:7px;font-size:10.5px;color:var(--ink-soft)}
   .notes b{color:var(--ink)}
-  .notes li{margin:2px 0 2px 16px}
-  footer{margin-top:9px;text-align:right;font-size:10px;color:var(--ink-soft)}
+  .notes li{margin:1px 0 1px 15px}
+  footer{margin-top:6px;text-align:right;font-size:9.5px;color:var(--ink-soft)}
   @page{size:A4 portrait;margin:8mm}
   @media print{body{background:#fff}.sheet{max-width:100%;padding:0}}
 </style>
@@ -55,34 +58,45 @@
 <body>
 <div class="sheet">
   <header>
-    <h1>分娩舎 棚卸 操作マニュアル</h1>
-    <div class="sub">古井農場 分娩舎（各部屋・ミルキー室）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
+    <h1>分娩舎・子豚舎 棚卸 操作マニュアル</h1>
+    <div class="sub">古井農場 分娩舎（各部屋・ミルキー室）／子豚舎（1〜8号室）<br>iPad・スマホ入力 → 繁殖事務所へ送って印刷</div>
   </header>
 
   <div class="links">
-    <div class="row"><span class="tag">リンク</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/</span></div>
+    <div class="row"><span class="tag">分娩舎</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/</span></div>
+    <div class="row"><span class="tag">子豚舎</span><span class="u">https://chidoriyoshida.github.io/koi-bunben/kobuta.html</span></div>
     <div class="note">Safari／Chrome で開きます。共有ボタン →「ホーム画面に追加」でアイコン化すると次回から便利です。</div>
   </div>
 
   <h2>1. iPad・スマホで入力する</h2>
-  <div class="step"><div class="num">1</div><div class="body"><b>リンクを開き、日付・記録者を入力。</b></div></div>
-  <div class="step"><div class="num">2</div><div class="body"><b>部屋タブ（各部屋・ミルキー室）を選び、各房を入力。</b><div class="d">母豚の在・不在、状態（分娩・授乳・離乳）と子豚の頭数を入力します（頭数はボタンで選択、他の数は「他」で手入力）。</div></div></div>
-  <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」で確認。</b><div class="d">部屋別の母豚数・子豚数の集計と照合。差が出たら入力を見直し。</div></div></div>
-  <div class="step"><div class="num">4</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています。</div></div></div>
+  <div class="step"><div class="num">1</div><div class="body"><b>それぞれのリンクを開き、日付・記録者を入力。</b></div></div>
+  <div class="area">
+    <div class="abox">
+      <div class="ttl">▼ 分娩舎</div>
+      <div class="step"><div class="num">2</div><div class="body"><b>部屋タブ（各部屋・ミルキー室）を選び入力。</b><div class="d">母豚の在・不在、状態（分娩・授乳・離乳）と子豚の頭数（ボタン選択、他は「他」で手入力）。</div></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」で照合。</b><div class="d">部屋別の母豚数・子豚数を集計・照合。</div></div></div>
+    </div>
+    <div class="abox">
+      <div class="ttl">▼ 子豚舎</div>
+      <div class="step"><div class="num">2</div><div class="body"><b>号室タブ（1〜8号室）を選び入力。</b><div class="d">各房の頭数・体重（複列＝右列手前1〜奥8／左列奥9〜手前16）。</div></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><b>「集計・チェック」＋「飼料の棚卸」。</b><div class="d">照合と体重区分（10・20・30・40kg）、タンク41〜44・紙袋の在庫（銘柄別合計は自動計算）。</div></div></div>
+    </div>
+  </div>
+  <div class="step" style="margin-top:5px"><div class="num">4</div><div class="body"><b>入力は自動保存。</b><div class="d">同じ端末・同じブラウザなら次に開いても残っています（分娩舎・子豚舎は別々に保存されます）。</div></div></div>
 
-  <h2 class="blue">2. 繁殖事務所へ送って印刷する（どちらか一方でOK）</h2>
+  <h2 class="blue">2. 繁殖事務所へ送って印刷する（どちらか一方でOK・両アプリ共通）</h2>
   <div class="cols">
     <div class="card A">
       <div class="ttl">方法A：データを送る<span class="rec">おすすめ・きれいに印刷</span></div>
       <div class="who">▼ iPad・スマホ（担当者）</div>
       <ol>
-        <li>「集計・チェック」→「<b>バックアップ保存</b>」をタップ（.jsonファイルができます）。</li>
+        <li>「集計・チェック」→「<b>バックアップ保存</b>」（.jsonファイルができます）。</li>
         <li>そのファイルを<b>メールに添付</b>して事務所へ送信（iPadは共有→メール）。</li>
       </ol>
       <div class="who">▼ 事務所PC</div>
       <ol>
         <li>同じリンクを開く →「<b>バックアップ読込</b>」→ 受け取った.jsonを選ぶ。</li>
-        <li>データが入るので「<b>印刷（A4縦・提出用）</b>」→ A4縦で印刷。</li>
+        <li>データが入るので「<b>印刷（A4縦・提出用）</b>」→ A4縦・各1枚で印刷。</li>
       </ol>
     </div>
     <div class="card B">
@@ -90,7 +104,7 @@
       <div class="who">▼ iPad・スマホ（担当者）</div>
       <ol>
         <li>「<b>印刷（A4縦・提出用）</b>」をタップ。</li>
-        <li>iPad/iPhone：プレビュー右上の<b>共有</b>→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
+        <li>iPad/iPhone：共有→「ファイルに保存」またはメール。／Android：印刷画面で「<b>PDF形式で保存</b>」。</li>
         <li>保存した<b>PDFをメール添付</b>して事務所へ送信。</li>
       </ol>
       <div class="who">▼ 事務所PC</div>
@@ -105,14 +119,15 @@
   <div class="notes">
     <b>注意事項</b>
     <ul>
-      <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。複数人で分担した場合は、各自の.jsonを事務所で「<b>部屋を合算して読込</b>」すると、入力済みの部屋だけが取り込まれ合算されます（同じ部屋は後勝ち）。</li>
-      <li>印刷は<b>A4縦・提出用</b>（部屋別の一覧と集計）。</li>
+      <li>分娩舎と子豚舎は<b>別々のアプリ</b>です。データ・バックアップ・印刷はそれぞれの画面で個別に行ってください（頭数を二重に数えないよう部屋の分担にご注意）。</li>
+      <li>データは<b>開いた端末のブラウザ内に保存</b>されます（端末ごと）。複数人で分担した場合は事務所で各自の.jsonを「<b>部屋を合算して読込</b>」すると、入力済みの部屋だけが取り込まれ合算されます（同じ部屋は後勝ち）。</li>
+      <li>印刷：分娩舎＝<b>A4縦1枚</b>（部屋別一覧＋集計）／子豚舎＝<b>A4縦1枚</b>（部屋別照合・体重区分・飼料の棚卸・全8部屋の房別明細＝頭数・体重kg）。</li>
       <li>「<b>この棚卸を消去</b>」は全消去です。次回の棚卸を白紙で始めるときだけ使ってください。</li>
       <li>「CSVで書き出し」は表計算ソフト用の記録です（印刷用は方法A/Bを使用）。</li>
     </ul>
   </div>
 
-  <footer>古井農場 分娩舎 棚卸システム</footer>
+  <footer>古井農場 分娩舎・子豚舎 棚卸システム</footer>
 </div>
 </body>
 </html>
