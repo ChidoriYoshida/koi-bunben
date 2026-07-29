@@ -43,6 +43,13 @@
   .room-head h2{font-size:19px;font-weight:800}
   .room-head .hint{font-size:11.5px;color:var(--ink-soft)}
 
+  .bulk-row{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:8px;flex-wrap:wrap}
+  .bulk-row label{font-size:13px;color:var(--accent);font-weight:700}
+  .bulk-row input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:90px;font-size:15px;font-family:inherit}
+  .bulk-row input:focus{outline:none;border-color:var(--accent)}
+  .bulk-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+  .bulk-note{font-size:11px;color:var(--ink-soft)}
+
   .orient{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:11px;font-weight:700;margin:4px 2px}
   .orient .ln{flex:1;height:1px;background:var(--line-strong)}
 
@@ -321,6 +328,8 @@ function renderRoom(r){
   var ok=sub!==""?(Number(sub)===head):null;
   mainEl.innerHTML=
     '<div class="room-head"><h2>'+r+'号室</h2><span class="hint">各房の頭数（頭）と体重（kg）を入力。中央＝通路。上＝奥／下＝手前・入口。</span></div>'+
+    '<div class="bulk-row"><label>頭数 一律入力</label><input inputmode="numeric" id="bulkc-'+r+'" placeholder="頭"><button class="bulk-btn" onclick="applyBulkHead('+r+')">この部屋に一括</button><span class="bulk-note">全'+PENS+'房の頭数にまとめて入力</span></div>'+
+    '<div class="bulk-row"><label>体重 一律入力</label><input inputmode="decimal" id="bulkw-'+r+'" placeholder="kg"><button class="bulk-btn" onclick="applyBulkWeight('+r+')">この部屋に一括</button><span class="bulk-note">全'+PENS+'房の体重にまとめて入力</span></div>'+
     '<div class="orient"><span class="ln"></span><span>奥</span><span class="ln"></span></div>'+
     '<div class="floor">'+
       '<div class="colhead"><div class="grp"><span class="s0"></span><span class="s1">頭数</span><span class="s1">体重</span></div><div class="aisle-sp"></div><div class="grp"><span class="s0"></span><span class="s1">頭数</span><span class="s1">体重</span></div></div>'+
@@ -350,6 +359,20 @@ function renderRoom(r){
   });
 }
 
+function applyBulkHead(r){
+  var el=document.getElementById("bulkc-"+r);
+  var v=(el.value||"").replace(/[^\d]/g,"");
+  if(v==="")return;
+  for(var p=1;p<=PENS;p++){state.rooms[r].pens[p].head=v;}
+  save();renderRoom(r);
+}
+function applyBulkWeight(r){
+  var el=document.getElementById("bulkw-"+r);
+  var v=(el.value||"").replace(/[^\d.]/g,"");
+  if(v==="")return;
+  for(var p=1;p<=PENS;p++){state.rooms[r].pens[p].weight=v;}
+  save();renderRoom(r);
+}
 function onPenInput(e){
   var el=e.target,r=Number(el.dataset.r),p=Number(el.dataset.p),k=el.dataset.k;
   var v=el.value;
