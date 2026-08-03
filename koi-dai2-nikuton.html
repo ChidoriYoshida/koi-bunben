@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>古井第2農場　肉豚棚卸表</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2f6b46">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="第2肉豚棚卸">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 <style>
 :root{
   --ink:#23241f; --paper:#f3f1e9; --panel:#fff; --line:#d3cfc1;
@@ -30,6 +38,7 @@ h1{font-size:19px;margin:4px 0 8px;color:var(--accent);}
 .barn-stat{font-size:13px;color:#6b6a5f;}
 .barn-stat b{font-size:20px;color:var(--ink);}
 .bulk-row{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:12px;flex-wrap:wrap;}
+  .bulk-set{display:inline-flex;align-items:center;gap:6px}
 .bulk-row label{font-size:13px;color:var(--accent);font-weight:700;}
 .bulk-row input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:90px;font-size:15px;}
 .bulk-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;}
@@ -270,14 +279,9 @@ function buildUI(){
       + '<div class="barn-card">'
       + '<div class="barn-head"><div class="barn-title">'+b.id+'棟</div>'
       + '<div class="barn-stat">頭数合計 <b id="bh-'+b.id+'">0</b></div></div>'
-      + '<div class="bulk-row"><label>頭数 一律入力</label>'
-      + '<input type="number" inputmode="numeric" min="0" id="bulkc-'+b.id+'" placeholder="頭">'
-      + '<button class="bulk-btn" onclick="applyBulkCount(\''+b.id+'\')">この棟に一括</button>'
-      + '<span class="bulk-note">全'+b.pens+'房の頭数にまとめて入力</span></div>'
-      + '<div class="bulk-row"><label>体重 一律入力</label>'
-      + '<input type="number" inputmode="decimal" min="0" step="0.1" id="bulk-'+b.id+'" placeholder="kg">'
-      + '<button class="bulk-btn" onclick="applyBulk(\''+b.id+'\')">この棟に一括</button>'
-      + '<span class="bulk-note">全'+b.pens+'房の体重にまとめて入力</span></div>'
+      + '<div class="bulk-row"><label>一律入力</label>'
+      + '<span class="bulk-set">頭数 <input type="number" inputmode="numeric" min="0" id="bulkh-'+b.id+'" placeholder="頭"><button class="bulk-btn" onclick="applyBulk(\''+b.id+'\',\'count\')">この棟に一括</button></span>'
+      + '<span class="bulk-set">体重 <input type="number" inputmode="decimal" min="0" step="0.1" id="bulk-'+b.id+'" placeholder="kg"><button class="bulk-btn" onclick="applyBulk(\''+b.id+'\',\'weight\')">この棟に一括</button></span></div>'
       + body
       + '</div></div>';
   });
@@ -337,24 +341,17 @@ function switchTab(id){
   window.scrollTo(0,0);
 }
 
-function applyBulk(barnId){
-  const val=document.getElementById('bulk-'+barnId).value;
+function applyBulk(barnId, kind){
+  kind = kind || 'weight';
+  const id = (kind==='count'?'bulkh-':'bulk-')+barnId;
+  const el=document.getElementById(id); if(!el) return;
+  const val=el.value;
   if(val==='') return;
   const b=BARNS.find(x=>x.id===barnId);
   penList(b).forEach(p=>{
-    data[barnId][p].weight=val;
-    if(refs[barnId][p].w) refs[barnId][p].w.value=val;
-  });
-  updateTotals(); autoSave();
-}
-
-function applyBulkCount(barnId){
-  const val=document.getElementById('bulkc-'+barnId).value;
-  if(val==='') return;
-  const b=BARNS.find(x=>x.id===barnId);
-  penList(b).forEach(p=>{
-    data[barnId][p].count=val;
-    if(refs[barnId][p].c) refs[barnId][p].c.value=val;
+    data[barnId][p][kind]=val;
+    const ref = kind==='count'?refs[barnId][p].c:refs[barnId][p].w;
+    if(ref) ref.value=val;
   });
   updateTotals(); autoSave();
 }
@@ -545,7 +542,7 @@ function clearAll(){
   BARNS.forEach(b=>{ manual[b.id]=''; var mi=document.getElementById('man-'+b.id); if(mi) mi.value=''; });
   TANKS.forEach(t=>{ tankBrands(t.no).forEach(br=>{ var bi=BRANDS.indexOf(br); feed[t.no][br]=''; var fi=document.getElementById('feed-'+t.no+'-'+bi); if(fi) fi.value=''; }); });
   ['year','month','day','staff'].forEach(id=>{ var e=document.getElementById(id); if(e) e.value=''; });
-  BARNS.forEach(b=>{ var bi=document.getElementById('bulk-'+b.id); if(bi) bi.value=''; });
+  BARNS.forEach(b=>{ var bi=document.getElementById('bulk-'+b.id); if(bi) bi.value=''; var bh=document.getElementById('bulkh-'+b.id); if(bh) bh.value=''; });
   localStorage.removeItem(STORE);
   updateTotals();
   status('データをクリアしました');
@@ -562,6 +559,40 @@ buildUI();
 loadData();
 switchTab('201');
 updateTotals();
+</script>
+<style>
+#pwaOff{position:fixed;left:10px;bottom:10px;z-index:9999;background:#8a5a00;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;padding:7px 11px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.25);display:none}
+#pwaOff.show{display:block}
+#pwaUpd{position:fixed;left:10px;right:10px;bottom:10px;z-index:10000;max-width:520px;margin:0 auto;background:#23241f;color:#fff;font:500 13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 12px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.3);display:none;align-items:center;justify-content:space-between;gap:10px}
+#pwaUpd.show{display:flex}
+#pwaUpd .btns{white-space:nowrap}
+#pwaUpd button{background:#2f6b46;color:#fff;border:none;border-radius:8px;padding:8px 14px;font:700 13px/1 sans-serif;cursor:pointer}
+#pwaUpd button.x{background:transparent;color:#bbb;padding:8px 6px}
+@media print{#pwaOff,#pwaUpd{display:none !important}}
+</style>
+<div id="pwaOff">● オフライン（入力・保存はできます）</div>
+<div id="pwaUpd"><span>新しいバージョンがあります。</span><span class="btns"><button onclick="pwaReload()">更新</button><button class="x" onclick="document.getElementById('pwaUpd').classList.remove('show')">×</button></span></div>
+<script>
+(function(){
+  var swReg=null, refreshing=false, userTriggered=false;
+  function offUI(){var o=document.getElementById('pwaOff');if(o)o.classList.toggle('show',!navigator.onLine);}
+  window.addEventListener('online',offUI);window.addEventListener('offline',offUI);offUI();
+  function showUpd(){var b=document.getElementById('pwaUpd');if(b)b.classList.add('show');}
+  window.pwaReload=function(){var b=document.getElementById('pwaUpd');if(b)b.classList.remove('show');userTriggered=true;if(swReg&&swReg.waiting){swReg.waiting.postMessage('SKIP_WAITING');}else{location.reload();}};
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('controllerchange',function(){if(!userTriggered||refreshing)return;refreshing=true;location.reload();});
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('service-worker.js').then(function(reg){
+        swReg=reg;
+        if(reg.waiting && navigator.serviceWorker.controller) showUpd();
+        reg.addEventListener('updatefound',function(){
+          var nw=reg.installing; if(!nw) return;
+          nw.addEventListener('statechange',function(){ if(nw.state==='installed' && navigator.serviceWorker.controller) showUpd(); });
+        });
+      }).catch(function(){});
+    });
+  }
+})();
 </script>
 </body>
 </html>
