@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>古井農場 子豚舎 棚卸表</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2f6b46">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="子豚舎棚卸">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 <style>
   :root{
     --ink:#23241f; --ink-soft:#6b6a5e; --paper:#f3f1e9; --panel:#ffffff;
@@ -42,12 +50,12 @@
   .room-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
   .room-head h2{font-size:19px;font-weight:800}
   .room-head .hint{font-size:11.5px;color:var(--ink-soft)}
-
-  .bulk-row{display:flex;align-items:center;gap:8px;background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin-bottom:8px;flex-wrap:wrap}
-  .bulk-row label{font-size:13px;color:var(--accent);font-weight:700}
-  .bulk-row input{border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:90px;font-size:15px;font-family:inherit}
-  .bulk-row input:focus{outline:none;border-color:var(--accent)}
-  .bulk-btn{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+  .bulk-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--accent-soft,#e3efe6);border:1px solid var(--line);border-radius:8px;padding:7px 10px;margin-bottom:8px;font-size:13px}
+  .bulk-set{display:inline-flex;align-items:center;gap:6px}
+  .bulk-row label{font-weight:700;color:var(--accent,#2f6b46)}
+  .bulk-row input{width:80px;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:15px;text-align:center}
+  .bulk-btn.clear-btn{background:#fff;color:var(--warn,#b23b2e);border:1px solid var(--warn,#b23b2e);margin-left:auto}
+  .bulk-btn{background:var(--accent,#2f6b46);color:#fff;border:none;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer}
   .bulk-note{font-size:11px;color:var(--ink-soft)}
 
   .orient{display:flex;align-items:center;gap:8px;color:var(--ink-soft);font-size:11px;font-weight:700;margin:4px 2px}
@@ -328,8 +336,11 @@ function renderRoom(r){
   var ok=sub!==""?(Number(sub)===head):null;
   mainEl.innerHTML=
     '<div class="room-head"><h2>'+r+'号室</h2><span class="hint">各房の頭数（頭）と体重（kg）を入力。中央＝通路。上＝奥／下＝手前・入口。</span></div>'+
-    '<div class="bulk-row"><label>頭数 一律入力</label><input inputmode="numeric" id="bulkc-'+r+'" placeholder="頭"><button class="bulk-btn" onclick="applyBulkHead('+r+')">この部屋に一括</button><span class="bulk-note">全'+PENS+'房の頭数にまとめて入力</span></div>'+
-    '<div class="bulk-row"><label>体重 一律入力</label><input inputmode="decimal" id="bulkw-'+r+'" placeholder="kg"><button class="bulk-btn" onclick="applyBulkWeight('+r+')">この部屋に一括</button><span class="bulk-note">全'+PENS+'房の体重にまとめて入力</span></div>'+
+    '<div class="bulk-row"><label>一律入力</label>'+
+    '<span class="bulk-set">頭数 <input type="number" inputmode="numeric" min="0" id="bulkh-'+r+'" placeholder="頭"><button class="bulk-btn" onclick="applyBulkRoom('+r+',\'head\')">この号室に一括</button></span>'+
+    '<span class="bulk-set">体重 <input type="number" inputmode="decimal" min="0" step="0.1" id="bulkw-'+r+'" placeholder="kg"><button class="bulk-btn" onclick="applyBulkRoom('+r+',\'weight\')">この号室に一括</button></span>'+
+    '<button class="bulk-btn clear-btn" onclick="clearRoom('+r+')">この号室をクリア</button>'+
+    '</div>'+
     '<div class="orient"><span class="ln"></span><span>奥</span><span class="ln"></span></div>'+
     '<div class="floor">'+
       '<div class="colhead"><div class="grp"><span class="s0"></span><span class="s1">頭数</span><span class="s1">体重</span></div><div class="aisle-sp"></div><div class="grp"><span class="s0"></span><span class="s1">頭数</span><span class="s1">体重</span></div></div>'+
@@ -359,19 +370,19 @@ function renderRoom(r){
   });
 }
 
-function applyBulkHead(r){
-  var el=document.getElementById("bulkc-"+r);
-  var v=(el.value||"").replace(/[^\d]/g,"");
-  if(v==="")return;
-  for(var p=1;p<=PENS;p++){state.rooms[r].pens[p].head=v;}
-  save();renderRoom(r);
+function applyBulkRoom(r, kind){
+  kind = kind || "weight";
+  var id = (kind==="head"?"bulkh-":"bulkw-")+r;
+  var el=document.getElementById(id); if(!el) return;
+  var v=el.value; if(v==="") return;
+  for(var p=1;p<=PENS;p++){ state.rooms[r].pens[p][kind]=v; }
+  save(); renderRoom(r);
 }
-function applyBulkWeight(r){
-  var el=document.getElementById("bulkw-"+r);
-  var v=(el.value||"").replace(/[^\d.]/g,"");
-  if(v==="")return;
-  for(var p=1;p<=PENS;p++){state.rooms[r].pens[p].weight=v;}
-  save();renderRoom(r);
+function clearRoom(r){
+  if(!confirm(r+"号室の入力（頭数・体重・集計頭数）をすべて消去します。よろしいですか？")) return;
+  for(var p=1;p<=PENS;p++){ state.rooms[r].pens[p].head=""; state.rooms[r].pens[p].weight=""; }
+  state.rooms[r].sub="";
+  save(); renderRoom(r);
 }
 function onPenInput(e){
   var el=e.target,r=Number(el.dataset.r),p=Number(el.dataset.p),k=el.dataset.k;
@@ -635,6 +646,40 @@ elDate.value=state.meta.date||"";elRec.value=state.meta.recorder||"";
 elDate.addEventListener("change",function(){state.meta.date=elDate.value;save();});
 elRec.addEventListener("input",function(){state.meta.recorder=elRec.value;save();});
 buildNav();render();
+</script>
+<style>
+#pwaOff{position:fixed;left:10px;bottom:10px;z-index:9999;background:#8a5a00;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;padding:7px 11px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.25);display:none}
+#pwaOff.show{display:block}
+#pwaUpd{position:fixed;left:10px;right:10px;bottom:10px;z-index:10000;max-width:520px;margin:0 auto;background:#23241f;color:#fff;font:500 13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 12px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.3);display:none;align-items:center;justify-content:space-between;gap:10px}
+#pwaUpd.show{display:flex}
+#pwaUpd .btns{white-space:nowrap}
+#pwaUpd button{background:#2f6b46;color:#fff;border:none;border-radius:8px;padding:8px 14px;font:700 13px/1 sans-serif;cursor:pointer}
+#pwaUpd button.x{background:transparent;color:#bbb;padding:8px 6px}
+@media print{#pwaOff,#pwaUpd{display:none !important}}
+</style>
+<div id="pwaOff">● オフライン（入力・保存はできます）</div>
+<div id="pwaUpd"><span>新しいバージョンがあります。</span><span class="btns"><button onclick="pwaReload()">更新</button><button class="x" onclick="document.getElementById('pwaUpd').classList.remove('show')">×</button></span></div>
+<script>
+(function(){
+  var swReg=null, refreshing=false, userTriggered=false;
+  function offUI(){var o=document.getElementById('pwaOff');if(o)o.classList.toggle('show',!navigator.onLine);}
+  window.addEventListener('online',offUI);window.addEventListener('offline',offUI);offUI();
+  function showUpd(){var b=document.getElementById('pwaUpd');if(b)b.classList.add('show');}
+  window.pwaReload=function(){var b=document.getElementById('pwaUpd');if(b)b.classList.remove('show');userTriggered=true;if(swReg&&swReg.waiting){swReg.waiting.postMessage('SKIP_WAITING');}else{location.reload();}};
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('controllerchange',function(){if(!userTriggered||refreshing)return;refreshing=true;location.reload();});
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('service-worker.js').then(function(reg){
+        swReg=reg;
+        if(reg.waiting && navigator.serviceWorker.controller) showUpd();
+        reg.addEventListener('updatefound',function(){
+          var nw=reg.installing; if(!nw) return;
+          nw.addEventListener('statechange',function(){ if(nw.state==='installed' && navigator.serviceWorker.controller) showUpd(); });
+        });
+      }).catch(function(){});
+    });
+  }
+})();
 </script>
 </body>
 </html>
