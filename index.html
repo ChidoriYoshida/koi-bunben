@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>古井農場 分娩舎 棚卸</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2f6b46">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="分娩舎棚卸">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 <style>
   :root{
     --ink:#1d2520;
@@ -284,7 +292,12 @@ const SOW_PENS=(()=>{const a=[];for(let r=1;r<=ROWS;r++)for(let c=1;c<=COLS;c++)
 const ROOMS=[1,2,3,4,5,6];
 const STORE_KEY="furui_bunben_tanaoroshi_v2";
 
+const FEED_TANKS=[31,32,33,34,35,36,37,38].map(n=>({no:n,barn:"分娩舎",feed:"たから授乳"}));
+function feedTotal(){var s=0;FEED_TANKS.forEach(t=>{s+=parseFloat(state.feedTank&&state.feedTank[t.no])||0;});return s;}
+function fmtf(n){return (Math.round(n*100)/100).toString();}
 let state=load()||freshState();
+if(!state.feedTank) state.feedTank={};
+FEED_TANKS.forEach(t=>{ if(state.feedTank[t.no]==null) state.feedTank[t.no]=""; });
 migrate(state);
 function migrate(s){
   ROOMS.forEach(r=>{
@@ -325,7 +338,8 @@ function freshState(){
     rooms[r]={pens:{},milky:{nursing:0,weaned:0},ps:0,gp:0,book:{nursing:"",weaned:""}};
     SOW_PENS.forEach(p=>{rooms[r].pens[p]={sow:false,piglets:0};});
   });
-  return {meta:{date:iso,recorder:""},rooms};
+  const feedTank={}; FEED_TANKS.forEach(t=>{feedTank[t.no]="";});
+  return {meta:{date:iso,recorder:""},rooms,feedTank};
 }
 function load(){try{const r=localStorage.getItem(STORE_KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
 let saveTimer=null;
@@ -536,6 +550,14 @@ function renderSum(){
     </table>
     </div>
     <p class="note">「実数」は各房で数えた頭数の自動集計です。「集計頭数」に管理上の頭数を入力すると差を照合します。</p>
+    <div class="section-title">飼料の棚卸（分娩部門）</div>
+    <div style="overflow-x:auto">
+    <table class="table sumtable">
+      <thead><tr><th>タンクNo.</th><th>豚舎</th><th>飼料名</th><th>残数量</th><th>単位</th></tr></thead>
+      <tbody>${FEED_TANKS.map(t=>`<tr><td class="room">${t.no}</td><td>${t.barn}</td><td>${t.feed}</td><td><input class="feedin tnum" inputmode="decimal" data-no="${t.no}" value="${state.feedTank[t.no]||""}" placeholder="—" style="width:70px"></td><td>t</td></tr>`).join("")}</tbody>
+      <tfoot><tr class="trtotal"><td colspan="3">たから授乳 合計</td><td class="tnum b" id="feedTot">${fmtf(feedTotal())}</td><td>t</td></tr></tfoot>
+    </table>
+    </div>
     <div class="actions">
       <button class="primary" id="btnPrint">印刷（A4縦・提出用）</button>
       <button id="btnCsv">CSVで書き出し</button>
@@ -556,6 +578,11 @@ function renderSum(){
     const tr=e.target.closest("tr"),cells=tr.querySelectorAll("td");
     if(k==="nursing")cells[6].innerHTML=diffCell(t.nursing,a.nursing);else cells[9].innerHTML=diffCell(t.weaned,a.weaned);
     syncNav();
+  }));
+  mainEl.querySelectorAll("input.feedin").forEach(el=>el.addEventListener("input",e=>{
+    const v=e.target.value.replace(/[^\d.]/g,"");e.target.value=v;
+    state.feedTank[e.target.dataset.no]=v;save();
+    const ft=document.getElementById("feedTot");if(ft)ft.textContent=fmtf(feedTotal());
   }));
   document.getElementById("btnCsv").addEventListener("click",exportCsv);
   document.getElementById("btnPrint").addEventListener("click",()=>{buildPrintDoc();window.print();});
@@ -673,6 +700,12 @@ function buildPrintDoc(){
       <tbody>${body}</tbody>
     </table>
     <div class="pd-sub">※「棚卸実数」は各房で数えた頭数の集計。「集計頭数」は管理上の頭数（手入力）。差は［集計頭数−棚卸実数］。</div>
+    <div class="pd-secttl">飼料の棚卸（分娩部門）</div>
+    <table class="pd-table" style="width:70%">
+      <thead><tr><th>タンクNo.</th><th>豚舎</th><th>飼料名</th><th>残数量</th><th>単位</th></tr></thead>
+      <tbody>${FEED_TANKS.map(t=>`<tr><td class="room">${t.no}</td><td>${t.barn}</td><td>${t.feed}</td><td>${state.feedTank[t.no]||""}</td><td>t</td></tr>`).join("")}
+      <tr class="total"><td colspan="3">たから授乳 合計</td><td class="big">${fmtf(feedTotal())}</td><td>t</td></tr></tbody>
+    </table>
     <div class="pd-secttl">各部屋 房別明細（上＝奥／下＝手前・中央＝ミルキー室　／ 緑「母」=母豚あり(授乳)・橙=離乳子豚・青=ミルキー(授乳/離乳)　数字＝子豚頭数）</div>
     <div class="pd-rooms">${ROOMS.map(pdRoom).join("")}</div>`;
 }
@@ -764,6 +797,11 @@ function exportCsv(){
   rows.push(["合計",g.sowPS,g.sowGP,g.sow,g.nursing,sumBook("nursing"),"",g.weaned,sumBook("weaned"),""]);
   rows.push([]);
   rows.push(["【集計】","母豚PS",g.sowPS,"母豚GP",g.sowGP,"授乳子豚",g.nursing,"離乳子豚",g.weaned]);
+  rows.push([]);
+  rows.push(["飼料の棚卸（分娩部門）"]);
+  rows.push(["タンクNo.","豚舎","飼料名","残数量","単位"]);
+  FEED_TANKS.forEach(t=>{rows.push([t.no,t.barn,t.feed,state.feedTank[t.no],"t"]);});
+  rows.push(["たから授乳 合計",fmtf(feedTotal()),"t"]);
   const csv="\uFEFF"+rows.map(r=>r.map(c=>`"${String(c==null?"":c).replace(/"/g,'""')}"`).join(",")).join("\r\n");
   const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download=`分娩舎棚卸_${state.meta.date}.csv`;a.click();URL.revokeObjectURL(url);
@@ -776,6 +814,40 @@ elDate.addEventListener("change",e=>{state.meta.date=e.target.value;save();});
 elRec.addEventListener("input",e=>{state.meta.recorder=e.target.value;save();});
 
 buildNav();render();
+</script>
+<style>
+#pwaOff{position:fixed;left:10px;bottom:10px;z-index:9999;background:#8a5a00;color:#fff;font:600 12px/1 -apple-system,BlinkMacSystemFont,sans-serif;padding:7px 11px;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,.25);display:none}
+#pwaOff.show{display:block}
+#pwaUpd{position:fixed;left:10px;right:10px;bottom:10px;z-index:10000;max-width:520px;margin:0 auto;background:#23241f;color:#fff;font:500 13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;padding:10px 12px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.3);display:none;align-items:center;justify-content:space-between;gap:10px}
+#pwaUpd.show{display:flex}
+#pwaUpd .btns{white-space:nowrap}
+#pwaUpd button{background:#2f6b46;color:#fff;border:none;border-radius:8px;padding:8px 14px;font:700 13px/1 sans-serif;cursor:pointer}
+#pwaUpd button.x{background:transparent;color:#bbb;padding:8px 6px}
+@media print{#pwaOff,#pwaUpd{display:none !important}}
+</style>
+<div id="pwaOff">● オフライン（入力・保存はできます）</div>
+<div id="pwaUpd"><span>新しいバージョンがあります。</span><span class="btns"><button onclick="pwaReload()">更新</button><button class="x" onclick="document.getElementById('pwaUpd').classList.remove('show')">×</button></span></div>
+<script>
+(function(){
+  var swReg=null, refreshing=false, userTriggered=false;
+  function offUI(){var o=document.getElementById('pwaOff');if(o)o.classList.toggle('show',!navigator.onLine);}
+  window.addEventListener('online',offUI);window.addEventListener('offline',offUI);offUI();
+  function showUpd(){var b=document.getElementById('pwaUpd');if(b)b.classList.add('show');}
+  window.pwaReload=function(){var b=document.getElementById('pwaUpd');if(b)b.classList.remove('show');userTriggered=true;if(swReg&&swReg.waiting){swReg.waiting.postMessage('SKIP_WAITING');}else{location.reload();}};
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.addEventListener('controllerchange',function(){if(!userTriggered||refreshing)return;refreshing=true;location.reload();});
+    window.addEventListener('load',function(){
+      navigator.serviceWorker.register('service-worker.js').then(function(reg){
+        swReg=reg;
+        if(reg.waiting && navigator.serviceWorker.controller) showUpd();
+        reg.addEventListener('updatefound',function(){
+          var nw=reg.installing; if(!nw) return;
+          nw.addEventListener('statechange',function(){ if(nw.state==='installed' && navigator.serviceWorker.controller) showUpd(); });
+        });
+      }).catch(function(){});
+    });
+  }
+})();
 </script>
 </body>
 </html>
