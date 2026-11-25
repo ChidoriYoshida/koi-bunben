@@ -279,7 +279,8 @@ function buildUI(){
   sections.innerHTML = secHTML;
 
   BARNS.forEach(b=>{ refs[b.id]={}; penList(b).forEach(p=>{ refs[b.id][p]={c:null,w:null}; }); });
-  sections.querySelectorAll('input[data-b]').forEach(inp=>{
+  const allInputs = Array.from(sections.querySelectorAll('input[data-b]'));
+  allInputs.forEach((inp,idx)=>{
     const bId=inp.dataset.b, p=inp.dataset.p, k=inp.dataset.k;
     if(k==='count') refs[bId][p].c=inp; else refs[bId][p].w=inp;
     inp.addEventListener('input',()=>{
@@ -287,6 +288,16 @@ function buildUI(){
       updateBarnStat(bId);
       updateTotals();
       autoSave();
+    });
+    // Enterキーで次の入力欄へ（頭数→体重→次の房…／棟末で次の棟タブへ。Shift+Enterで逆戻り）
+    inp.addEventListener('keydown',(e)=>{
+      if(e.key!=='Enter' && e.keyCode!==13) return;
+      e.preventDefault();
+      const dir = e.shiftKey ? -1 : 1;
+      const next = allInputs[idx+dir];
+      if(!next) return;
+      if(next.dataset.b!==bId) switchTab(next.dataset.b);
+      next.focus(); try{ if(next.select) next.select(); }catch(_){}
     });
   });
 
